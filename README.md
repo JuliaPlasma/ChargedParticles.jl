@@ -1,6 +1,7 @@
 # ChargedParticles.jl
 
 [![Build Status](https://github.com/Beforerr/ChargedParticles.jl/actions/workflows/CI.yml/badge.svg?branch=main)](https://github.com/Beforerr/ChargedParticles.jl/actions/workflows/CI.yml?query=branch%3Amain)
+[![Documentation](https://img.shields.io/badge/docs-stable-blue.svg)](https://beforerr.github.io/ChargedParticles.jl/dev/) 
 
 A Julia package for working with charged particles in plasma physics, inspired by [PlasmaPy](https://github.com/PlasmaPy/PlasmaPy)'s particles subpackage .
 
@@ -17,31 +18,6 @@ A Julia package for working with charged particles in plasma physics, inspired b
 ```julia
 using Pkg
 Pkg.add(url="https://github.com/Beforerr/ChargedParticles.jl")
-```
-
-## Usage
-
-```julia
-using ChargedParticles
-
-# Create basic particles
-e = electron()  # Creates an electron (e⁻)
-p = proton()    # Creates a proton (p⁺)
-
-# Create custom ions
-he = ChargedParticle(:He, 2, 4)  # Doubly ionized helium-4
-li = ChargedParticle(:Li, 1, 7)  # Singly ionized lithium-7
-
-# Access properties
-mass(e)            # Returns electron mass in atomic mass units
-charge(he)         # Returns helium charge (+2e)
-atomic_number(li)  # Returns lithium atomic number (3)
-mass_number(he)    # Returns helium mass number (4)
-
-# Check particle types
-is_electron(e)  # true
-is_proton(p)    # true
-is_ion(he)      # true
 ```
 
 ## Dependencies
