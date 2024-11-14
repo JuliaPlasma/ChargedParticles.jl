@@ -1,3 +1,6 @@
+const calculated_properties = (:charge, :atomic_number, :Z, :element)
+const synonym_fields = Dict(:z => :charge_number, :A => :mass_number)
+
 """Retrieve the mass of an element isotope."""
 function mass(element, mass_number)
     for iso in element.isotopes
@@ -59,3 +62,18 @@ function element(p::AbstractParticle)
         _ => return elements[p.symbol]
     end
 end
+
+function property_function(s::Symbol)
+    @match s begin
+        :Z => return atomic_number
+        _ => eval(Symbol("$s"))
+    end
+end
+
+function Base.getproperty(p::ChargedParticleImpl, s::Symbol)
+    s in calculated_properties && return property_function(s)(p)
+    s in keys(synonym_fields) && return getfield(p, synonym_fields[s])
+    return getfield(p, s)
+end
+
+Base.propertynames(p::ChargedParticleImpl) = (sort ∘ collect ∘ union)(keys(synonym_fields), calculated_properties, fieldnames(ChargedParticleImpl))

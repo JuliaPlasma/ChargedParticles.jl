@@ -81,6 +81,9 @@ using Mendeleev: elements
         @test_throws ArgumentError Particle("Fe-54"; mass_numb=55)
     end
 
+    @testset "Properties" begin
+        include("properties.jl")
+    end
     @testset "Atomic Number Constructor" begin
         # Test basic construction
         iron = Particle(26)
