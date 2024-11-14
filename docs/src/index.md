@@ -1,6 +1,10 @@
 # ChargedParticles.jl
 
-A Julia package for representing and manipulating charged particles in plasma physics.
+[![Build Status](https://github.com/Beforerr/ChargedParticles.jl/actions/workflows/CI.yml/badge.svg?branch=main)](https://github.com/Beforerr/ChargedParticles.jl/actions/workflows/CI.yml?query=branch%3Amain)
+[![Documentation](https://img.shields.io/badge/docs-dev-blue.svg)](https://beforerr.github.io/ChargedParticles.jl/dev/) 
+
+
+A Julia package for representing charged particles inspired by [PlasmaPy](https://github.com/PlasmaPy/PlasmaPy)'s particles subpackage.
 
 ## Overview
 
@@ -38,9 +42,17 @@ d = Particle("D+")         # Deuteron
 
 # Access properties
 println("Electron mass: ", mass(e))
+println("Alpha particle charge: ", charge(α))
 println("Iron charge: ", charge(fe3))
 println("Iron-56 mass number: ", mass_number(fe56))
+println("Deuteron mass: ", mass(d))
 ```
+
+## Related Packages
+
+- [PlasmaPy](https://github.com/PlasmaPy/PlasmaPy): A Python package for plasma physics.
+- [Mendeleev.jl](https://github.com/Eben60/Mendeleev.jl): A Julia package for accessing periodic table data.
+- [Corpuscles.jl](https://github.com/Beforerr/Corpuscles.jl): A Julia package for for particle physics.
 
 ## Manual Outline
 
