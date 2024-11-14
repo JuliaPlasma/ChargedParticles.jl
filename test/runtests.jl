@@ -67,6 +67,20 @@ using Mendeleev: elements
         @test charge(he2plus) == 2q
     end
 
+    @testset "String constructor with keywords" begin
+        @test Particle("Fe").charge_number == 0
+        @test Particle("Fe 2+").charge_number == 2
+        @test Particle("Fe"; Z=2).charge_number == 2
+        @test Particle("Fe 2+"; Z=2).charge_number == 2
+        @test_throws ArgumentError Particle("Fe 2+"; Z=3)
+
+        @test Particle("Fe").mass_number == 56
+        @test Particle("Fe-54").mass_number == 54
+        @test Particle("Fe"; mass_numb=54).mass_number == 54
+        @test Particle("Fe-54", mass_numb=54).mass_number == 54
+        @test_throws ArgumentError Particle("Fe-54"; mass_numb=55)
+    end
+
     @testset "Atomic Number Constructor" begin
         # Test basic construction
         iron = Particle(26)
