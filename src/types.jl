@@ -30,7 +30,7 @@ Implementation type for charged particles.
 end
 
 """
-    Particle(str::AbstractString)
+    Particle(str::AbstractString; mass_numb=nothing, Z=nothing)
 
 Create a particle from a string representation.
 
@@ -44,17 +44,19 @@ Create a particle from a string representation.
 - Common aliases: `"electron"`, `"proton"`, `"alpha"`, `"mu-"`
 
 # Examples
-```julia
+```jldoctest; output = false
 # Elementary particles
-electron = Particle("e-")     # electron
-muon = Particle("mu-")        # muon
-positron = Particle("e+")     # positron
+electron = Particle("e-")
+muon = Particle("mu-")
+positron = Particle("e+")
 
 # Ions and isotopes
-proton = Particle("H+")       # proton
-alpha = Particle("He2+")      # alpha particle
-deuteron = Particle("D+")     # deuterium ion
-iron56 = Particle("Fe-56")    # iron-56 isotope
+proton = Particle("H+")
+alpha = Particle("He2+")
+deuteron = Particle("D+")
+iron56 = Particle("Fe-56")
+# output
+Fe
 ```
 """
 function Particle(str::AbstractString; mass_numb=nothing, Z=nothing)
@@ -70,39 +72,47 @@ function Particle(str::AbstractString; mass_numb=nothing, Z=nothing)
         end
         return ChargedParticleImpl(Symbol(symbol), charge, mass_number, mass)
     end
+
     # Try to parse as element with optional mass number and charge
-    m = match(r"^([A-Za-z]+)(?:-([\d]+))?(?:\s*(\d+)?([+-]))?$", str)
-    if !isnothing(m)
+    result = parse_particle_string(str)
+    if !isnothing(result)
+        (symbol, parsed_charge, parsed_mass_numb) = result
+        element = elements[symbol]
+        charge = determine(parsed_charge, Z; default=0)
+        mass_number = determine(parsed_mass_numb, mass_numb; default=element.mass_number)
+        mass = ChargedParticles.mass(element, mass_number)
+        return ChargedParticleImpl(symbol, charge, mass_number, mass)
+    end
+    throw(ArgumentError("Invalid particle string format: $str"))
+end
+
+"""Retrieve the mass of an element isotope."""
+function mass(element, mass_number)
+    for iso in element.isotopes
+        if iso.mass_number == mass_number
+            return iso.mass
+        end
+    end
+    throw(ArgumentError("No isotope found with mass number $mass_number for element $element"))
+end
+
+function parse_particle_string(str::AbstractString)
+    pattern = r"^([A-Za-z]+)(?:-([\d]+))?(?:\s*(\d+)?([+-]))?$"
+    m = match(pattern, str)
+    if isnothing(m)
+        return nothing
+    else
         element_str, mass_str, charge_magnitude, charge_sign = m.captures
-        # Parse 
         symbol = Symbol(element_str)
-        parsed_mass_numb = isnothing(mass_str) ? nothing : parse(Int, mass_str)
-        # Get charge
+        mass_number = isnothing(mass_str) ? nothing : parse(Int, mass_str)
         charge = if isnothing(charge_sign)
-            0
+            nothing
         else
             magnitude = isnothing(charge_magnitude) ? 1 : parse(Int, charge_magnitude)
             charge_sign == "+" ? magnitude : -magnitude
         end
-
-        if isnothing(mass_numb) && isnothing(parsed_mass_numb)
-            mass_numb = elements[symbol].mass_number
-        elseif isnothing(mass_numb) && !isnothing(parsed_mass_numb)
-            mass_numb = parsed_mass_numb
-        elseif !isnothing(mass_numb) && !isnothing(parsed_mass_numb)
-            @assert mass_numb == parsed_mass_numb
-        end
-
-        for iso in elements[symbol].isotopes
-            if iso.mass_number == mass_numb
-                mass = iso.mass
-                break
-            end
-        end
-
-        return ChargedParticleImpl(symbol, charge, mass_numb, mass)
+        return (symbol, charge, mass_number)
     end
-    throw(ArgumentError("Invalid particle string format: $str"))
 end
 
 """
@@ -131,7 +141,8 @@ See also: [`Particle(::AbstractString)`](@ref)
 function Particle(atomic_number::Int; mass_numb=nothing, Z=0)
     element = elements[atomic_number]
     mass_number = isnothing(mass_numb) ? element.mass_number : mass_numb
-    ChargedParticleImpl(element.symbol, Z, mass_number, element.atomic_mass)
+    mass = ChargedParticles.mass(element, mass_number)
+    ChargedParticleImpl(element.symbol, Z, mass_number, mass)
 end
 
 # Convenience constructors for common particles
