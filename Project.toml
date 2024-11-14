@@ -9,6 +9,7 @@ Mendeleev = "c116f080-063d-490a-9873-2b5b2cce4c34"
 Unitful = "1986cc42-f94f-5a68-af5c-568840ba703d"
 
 [compat]
+julia = "1.10"
 Match = "2.2.0"
 Mendeleev = "1.0.1"
 Unitful = "1.21.0"
