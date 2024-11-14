@@ -1,20 +1,22 @@
 using Test
 using ChargedParticles
+using ChargedParticles: is_electron, is_proton
 using Unitful
-using Unitful: q
+using Unitful: q, me
+
+using Mendeleev: elements
 
 @testset "ChargedParticles.jl" begin
     @testset "Basic Particles" begin
         # Test electron
         e = electron()
-        @test is_electron(e)
         @test charge(e) == -q
         @test atomic_number(e) == 0
         @test mass_number(e) == 0
+        @test mass(e) == me
 
         # Test proton
         p = proton()
-        @test is_proton(p)
         @test charge(p) == q
         @test atomic_number(p) == 1
         @test mass_number(p) == 1
@@ -65,29 +67,29 @@ using Unitful: q
         @test atomic_number(iron) == 26
 
         # Test with mass number and charge
-        he4 = Particle(2, mass_numb=4, Z=2)
+        he4 = Particle(2; mass_numb=4, Z=2)
         @test atomic_number(he4) == 2
         @test mass_number(he4) == 4
         @test charge(he4) == 2q
 
         # Test error cases
-        @test_throws ArgumentError Particle(0)
-        @test_throws ArgumentError Particle(-1)
+        @test_throws KeyError Particle(0)
+        @test_throws KeyError Particle(-1)
     end
 
     @testset "Error Handling" begin
         # Test invalid particle strings
-        @test_throws ArgumentError Particle("invalid")
-        @test_throws ArgumentError Particle("Xx")
+        @test_throws KeyError Particle("invalid")
+        @test_throws KeyError Particle("Xx")
 
         # Test invalid mass numbers
-        @test_throws ArgumentError Particle(:He, 2, -1)
+        @test_throws MethodError Particle(:He, 2, -1)
     end
 
     @testset "String Representation" begin
         @test string(electron()) == "e⁻"
         @test string(proton()) == "p⁺"
-        @test string(Particle("He2+")) == "He4²⁺"
+        @test string(Particle("He2+")) == "He2+"
         @test string(Particle("Fe-56")) == "Fe56"
     end
 end

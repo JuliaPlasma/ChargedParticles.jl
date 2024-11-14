@@ -2,7 +2,10 @@ module ChargedParticles
 
 using Unitful
 using UnitfulAtomic
-using PeriodicTable
+using Mendeleev
+using Mendeleev: elements # for PeriodicTable compatibility
+using Match
+using Unitful: me, mp
 
 export Particle
 export mass, charge, atomic_number, mass_number
@@ -43,29 +46,21 @@ abstract type AbstractParticle end
 
 Internal implementation of a charged particle with properties like mass, charge, and atomic properties.
 
-Fields:
+# Fields
+
 - symbol::Symbol : Chemical symbol of the particle
 - charge_number::Int : Number of elementary charges (can be negative)
-- mass_number::Int : Total number of nucleons (protons + neutrons)
+- mass_number::Int : Total number of nucleons (protons + neutrons) (for elements, the most abundant isotope)
+
+# Notes
+- Charge number : electrical charge in units of the elementary charge, usually denoted as z. # https://en.wikipedia.org/wiki/Charge_number
 """
-struct ChargedParticleImpl <: AbstractParticle
+@kwdef struct ChargedParticleImpl <: AbstractParticle
     symbol::Symbol
     charge_number::Int
+    # atomic_number::Int
     mass_number::Int
-
-    function ChargedParticleImpl(symbol::Symbol, charge_number::Int, mass_number::Int)
-        # Special cases for non-elements
-        if symbol in [:e, :μ, :n]
-            return new(symbol, charge_number, mass_number)
-        end
-
-        # Validate inputs for elements
-        element = elements[symbol]
-        if mass_number < 0
-            throw(ArgumentError("Mass number must be non-negative"))
-        end
-        new(symbol, charge_number, mass_number)
-    end
+    mass::Unitful.Mass
 end
 
 """
@@ -85,25 +80,26 @@ deuteron = Particle("D+")
 iron56 = Particle("Fe-56")
 ```
 """
-function Particle(particle_string::AbstractString)
+function Particle(str::AbstractString)
     # Check aliases first
-    if haskey(PARTICLE_ALIASES, particle_string)
-        symbol, charge, mass = PARTICLE_ALIASES[particle_string]
-        return ChargedParticleImpl(Symbol(symbol), charge, mass)
+    if haskey(PARTICLE_ALIASES, str)
+        symbol, charge, mass_number = PARTICLE_ALIASES[str]
+        # Get mass based on particle type
+        mass = @match symbol begin
+            "e" => me
+            "μ" => 206.7682827me
+            "n" => Unitful.mn
+            _ => elements[Symbol(symbol)].atomic_mass
+        end
+        return ChargedParticleImpl(Symbol(symbol), charge, mass_number, mass)
     end
-
     # Try to parse as element with optional mass number and charge
-    # Patterns: "Fe", "Fe-56", "Fe2+", "Fe-56 2+", "Fe 2+"
-    m = match(r"^([A-Za-z]+)(?:-?(\d+))?(?:\s*(\d+)?([+-]))?$", particle_string)
+    m = match(r"^([A-Za-z]+)(?:-([\d]+))?(?:\s*(\d+)?([+-]))?$", str)
     if !isnothing(m)
         element_str, mass_str, charge_magnitude, charge_sign = m.captures
-
-        # Get element symbol (case-sensitive)
+        # Parse 
         symbol = Symbol(element_str)
-
-        # Get mass number
-        mass_number = isnothing(mass_str) ? round(Int, elements[symbol].atomic_mass) : parse(Int, mass_str)
-
+        mass_number = isnothing(mass_str) ? elements[symbol].mass_number : parse(Int, mass_str)
         # Get charge
         charge = if isnothing(charge_sign)
             0
@@ -111,15 +107,14 @@ function Particle(particle_string::AbstractString)
             magnitude = isnothing(charge_magnitude) ? 1 : parse(Int, charge_magnitude)
             charge_sign == "+" ? magnitude : -magnitude
         end
-
-        return ChargedParticleImpl(symbol, charge, mass_number)
+        mass = elements[symbol].atomic_mass
+        return ChargedParticleImpl(symbol, charge, mass_number, mass)
     end
-
-    throw(ArgumentError("Invalid particle string format: $particle_string"))
+    throw(ArgumentError("Invalid particle string format: $str"))
 end
 
 """
-    Particle(atomic_number::Int; mass_numb::Union{Int,Nothing}=nothing, Z::Union{Int,Nothing}=nothing)
+    Particle(atomic_number::Int; mass_numb::Union{Int,Nothing}=nothing, Z::Int=0)
 
 Create a particle from its atomic number, with optional mass number and charge state.
 
@@ -129,40 +124,19 @@ proton = Particle(1, mass_numb=1, Z=1)
 helium = Particle(2, mass_numb=4, Z=2)
 ```
 """
-function Particle(atomic_number::Int; mass_numb::Union{Int,Nothing}=nothing, Z::Union{Int,Nothing}=nothing)
-    if atomic_number < 0
-        throw(ArgumentError("Atomic number must be non-negative"))
-    end
-
-    if atomic_number == 0
-        throw(ArgumentError("Atomic number cannot be 0"))
-    end
-
+function Particle(atomic_number::Int; mass_numb=nothing, Z=0)
     element = elements[atomic_number]
-    mass_number = isnothing(mass_numb) ? round(Int, element.atomic_mass) : mass_numb
-    charge = isnothing(Z) ? 0 : Z
-
-    ChargedParticleImpl(Symbol(element.symbol), charge, mass_number)
+    mass_number = isnothing(mass_numb) ? element.mass_number : mass_numb
+    ChargedParticleImpl(element.symbol, Z, mass_number, element.atomic_mass)
 end
 
 # Convenience constructors for common particles
-electron() = ChargedParticleImpl(:e, -1, 0)
-proton() = ChargedParticleImpl(:H, 1, 1)
+electron() = ChargedParticleImpl(:e, -1, 0, me)
+proton() = ChargedParticleImpl(:H, 1, 1, mp)
 
 # Basic properties
 """Return the mass of the particle in atomic mass units"""
-function mass(p::AbstractParticle)
-    if p.symbol == :e
-        return 5.485799090e-4u"u"
-    elseif p.symbol == :μ
-        return 0.1134289257u"u"
-    elseif p.symbol == :n
-        return 1.008664915823u"u"
-    else
-        element = elements[p.symbol]
-        return element.atomic_mass * u"u"
-    end
-end
+mass(p::AbstractParticle) = p.mass
 
 """Return the charge of the particle in elementary charge units"""
 charge(p::AbstractParticle) = p.charge_number * Unitful.q
@@ -172,15 +146,23 @@ function atomic_number(p::AbstractParticle)
     if p.symbol in [:e, :μ, :n]
         return 0
     else
-        elements[p.symbol].number
+        return elements[p.symbol].atomic_number
     end
 end
 
 """Return the mass number (total number of nucleons)"""
-mass_number(p::AbstractParticle) = p.mass_number
+function mass_number(p::AbstractParticle)
+    if p.symbol in [:e, :μ, :n]
+        return 0
+    else
+        return p.mass_number
+    end
+end
 
 # Type checking functions
 is_ion(p::AbstractParticle) = !(p.symbol in [:e, :μ]) && p.charge_number != 0
+is_electron(p) = p.symbol == :e && p.charge_number == -1 && p.mass == me
+is_proton(p) = p.symbol == :H && p.charge_number == 1 && p.mass_number == 1
 
 # String representation
 function Base.show(io::IO, p::AbstractParticle)

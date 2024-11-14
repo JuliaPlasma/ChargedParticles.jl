@@ -4,11 +4,14 @@ authors = ["Beforerr <zzj956959688@gmail.com> and contributors"]
 version = "1.0.0-DEV"
 
 [deps]
-PeriodicTable = "7b2266bf-644c-5ea3-82d8-af4bbd25a884"
+Match = "7eb4fadd-790c-5f42-8a69-bfa0b872bfbf"
+Mendeleev = "c116f080-063d-490a-9873-2b5b2cce4c34"
 Unitful = "1986cc42-f94f-5a68-af5c-568840ba703d"
 UnitfulAtomic = "a7773ee8-282e-5fa2-be4e-bd808c38a91a"
 
 [compat]
+Match = "2.2.0"
+Mendeleev = "1.0.1"
 Unitful = "1.21.0"
 
 [extras]
