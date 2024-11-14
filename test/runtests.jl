@@ -20,6 +20,12 @@ using Mendeleev: elements
         @test charge(p) == q
         @test atomic_number(p) == 1
         @test mass_number(p) == 1
+
+        # Test neutron
+        n = Particle("n")
+        @test charge(n) == 0q
+        @test atomic_number(n) == 0
+        @test mass_number(n) == 1
     end
 
     @testset "String Constructor" begin
@@ -89,7 +95,8 @@ using Mendeleev: elements
     @testset "String Representation" begin
         @test string(electron()) == "e⁻"
         @test string(proton()) == "p⁺"
-        @test string(Particle("He2+")) == "He2+"
-        @test string(Particle("Fe-56")) == "Fe56"
+        @test string(Particle("He2+")) == "He²⁺"
+        @test string(Particle("Fe-56")) == "Fe"
+        @test string(Particle("Fe-54")) == "Fe-54"
     end
 end

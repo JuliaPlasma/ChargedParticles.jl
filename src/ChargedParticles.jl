@@ -129,6 +129,7 @@ function Particle(str::AbstractString; mass_numb=nothing)
             magnitude = isnothing(charge_magnitude) ? 1 : parse(Int, charge_magnitude)
             charge_sign == "+" ? magnitude : -magnitude
         end
+        # TODO: FIX isotopes mass
         mass = elements[symbol].atomic_mass
 
         if isnothing(mass_numb) && isnothing(parsed_mass_numb)
@@ -177,7 +178,7 @@ end
 """Create an electron"""
 electron() = ChargedParticleImpl(:e, -1, 0, me)
 """Create a proton"""
-proton() = ChargedParticleImpl(:H, 1, 1, mp)
+proton() = ChargedParticleImpl(:p, 1, 1, mp)
 
 # Basic properties
 """Return the mass of the particle in atomic mass units"""
@@ -198,14 +199,10 @@ println(atomic_number(fe))  # 26
 
 e = electron()
 println(atomic_number(e))  # 0
-```
 """
 function atomic_number(p::AbstractParticle)
-    if p.symbol in [:e, :μ, :n]
-        return 0
-    else
-        return elements[p.symbol].atomic_number
-    end
+    e = element(p)
+    return isnothing(e) ? 0 : e.atomic_number
 end
 
 """
@@ -222,7 +219,19 @@ e = electron()
 println(mass_number(e))  # 0
 ```
 """
-mass_number(p::AbstractParticle) = p.mass_number
+mass_number(p) = p.mass_number
+mass_number(::Nothing) = nothing
+
+const ELEMENTARY_PARTICLES = (:e, :μ, :n)
+
+function element(p::AbstractParticle)
+    @match p.symbol begin
+        x, if x in ELEMENTARY_PARTICLES
+        end => return nothing
+        :p => return elements[:H]
+        _ => return elements[p.symbol]
+    end
+end
 
 """
     is_ion(p::AbstractParticle)
@@ -236,29 +245,33 @@ println(is_ion(fe3))  # true
 
 e = electron()
 println(is_ion(e))  # false
-```
 """
 is_ion(p::AbstractParticle) = !(p.symbol in [:e, :μ]) && p.charge_number != 0
 
+is_chemical_element(p) = haskey(elements, p.symbol) ? true : false
+is_default_isotope(p) = mass_number(p) == element(p).mass_number
 is_electron(p) = p.symbol == :e && p.charge_number == -1 && p.mass == me
 is_proton(p) = p.symbol == :H && p.charge_number == 1 && p.mass_number == 1
 
 # String representation
 function Base.show(io::IO, p::AbstractParticle)
-    if is_electron(p)
-        print(io, "e⁻")
-    elseif is_proton(p)
-        print(io, "p⁺")
-    else
-        charge_str = if p.charge_number > 0
-            "$(p.charge_number)+"
-        elseif p.charge_number < 0
-            "$(abs(p.charge_number))-"
-        else
-            ""
-        end
-        print(io, "$(p.symbol)$(p.mass_number)$(charge_str)")
+
+    supercripts = ["", '²', '³', '⁴', '⁵', '⁶', '⁷', '⁸', '⁹']
+
+    charge_str = @match p.charge_number begin
+        x, if x > 0
+        end => "$(supercripts[x])⁺"
+        x, if x < 0
+        end => "$(supercripts[abs(x)])⁻"
+        0 => ""
     end
+    # if mass number is the default, no need to print it
+    if is_chemical_element(p)
+        mass_number_str = is_default_isotope(p) ? "" : "-$(mass_number(p))"
+    else
+        mass_number_str = ""
+    end
+    print(io, "$(p.symbol)$(mass_number_str)$(charge_str)")
 end
 
 end
