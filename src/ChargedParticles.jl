@@ -13,7 +13,14 @@ export is_ion
 export electron, proton
 
 # Common particle aliases
-const PARTICLE_ALIASES = Dict(
+"""
+    PARTICLE_ALIASES
+
+Dictionary of common particle aliases and their corresponding (symbol, charge, mass_number) tuples.
+
+Each entry maps a string alias to a tuple of (symbol, charge, mass_number)
+"""
+PARTICLE_ALIASES = Dict(
     "electron" => ("e", -1, 0),
     "e-" => ("e", -1, 0),
     "e+" => ("e", 1, 0),
@@ -36,6 +43,13 @@ const PARTICLE_ALIASES = Dict(
     "mu+" => ("μ", 1, 0),
 )
 
+"""
+    AbstractParticle
+
+Abstract type representing any particle in plasma physics.
+
+See also: [`ChargedParticleImpl`](@ref)
+"""
 abstract type AbstractParticle end
 
 """
@@ -124,15 +138,27 @@ function Particle(str::AbstractString)
 end
 
 """
-    Particle(atomic_number::Int; mass_numb::Union{Int,Nothing}=nothing, Z::Int=0)
+    Particle(atomic_number::Int; mass_numb=nothing, Z=0)
 
-Create a particle from its atomic number, with optional mass number and charge state.
+Create a particle from its atomic number with optional mass number and charge state.
 
-Examples:
+# Arguments
+- `atomic_number::Int`: The atomic number (number of protons)
+- `mass_numb=nothing`: Optional mass number (total number of nucleons)
+- `Z=0`: Optional charge number (in elementary charge units)
+
+# Examples
 ```julia
-proton = Particle(1, mass_numb=1, Z=1)
-helium = Particle(2, mass_numb=4, Z=2)
+# Basic construction
+iron = Particle(26)        # Iron
+u = Particle(92)          # Uranium
+
+# With mass number and charge
+fe56_3plus = Particle(26, mass_numb=56, Z=3)  # Fe-56³⁺
+he4_2plus = Particle(2, mass_numb=4, Z=2)     # He⁴²⁺ (alpha particle)
 ```
+
+See also: [`Particle(::AbstractString)`](@ref)
 """
 function Particle(atomic_number::Int; mass_numb=nothing, Z=0)
     element = elements[atomic_number]
@@ -148,10 +174,23 @@ proton() = ChargedParticleImpl(:H, 1, 1, mp)
 """Return the mass of the particle in atomic mass units"""
 mass(p::AbstractParticle) = p.mass
 
-"""Return the charge of the particle in elementary charge units"""
+"""Return the electric charge of the particle in elementary charge units"""
 charge(p::AbstractParticle) = p.charge_number * Unitful.q
 
-"""Return the atomic number (number of protons)"""
+"""
+    atomic_number(p::AbstractParticle)
+
+Return the atomic number (number of protons) of the particle.
+
+# Examples
+```julia
+fe = Particle("Fe")
+println(atomic_number(fe))  # 26
+
+e = electron()
+println(atomic_number(e))  # 0
+```
+"""
 function atomic_number(p::AbstractParticle)
     if p.symbol in [:e, :μ, :n]
         return 0
@@ -160,11 +199,38 @@ function atomic_number(p::AbstractParticle)
     end
 end
 
-"""Return the mass number (total number of nucleons)"""
+"""
+    mass_number(p::AbstractParticle)
+
+Return the mass number (total number of nucleons) of the particle.
+
+# Examples
+```julia
+fe56 = Particle("Fe-56")
+println(mass_number(fe56))  # 56
+
+e = electron()
+println(mass_number(e))  # 0
+```
+"""
 mass_number(p::AbstractParticle) = p.mass_number
 
-# Type checking functions
+"""
+    is_ion(p::AbstractParticle)
+
+Check if the particle is an ion (has non-zero charge and is not an elementary particle).
+
+# Examples
+```julia
+fe3 = Particle("Fe3+")
+println(is_ion(fe3))  # true
+
+e = electron()
+println(is_ion(e))  # false
+```
+"""
 is_ion(p::AbstractParticle) = !(p.symbol in [:e, :μ]) && p.charge_number != 0
+
 is_electron(p) = p.symbol == :e && p.charge_number == -1 && p.mass == me
 is_proton(p) = p.symbol == :H && p.charge_number == 1 && p.mass_number == 1
 
