@@ -9,6 +9,7 @@ using Unitful: me, mp
 const ELEMENTARY_PARTICLES = (:e, :μ, :n)
 
 include("./types.jl")
+include("./properties.jl")
 include("./aliases.jl")
 include("./utils.jl")
 include("./display.jl")

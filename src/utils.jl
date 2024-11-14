@@ -91,3 +91,22 @@ function determine(x, y; default=nothing)
         (x, y) => x == y ? x : throw(ArgumentError("Inconsistent $x and $y"))
     end
 end
+
+function parse_particle_string(str::AbstractString)
+    pattern = r"^([A-Za-z]+)(?:-([\d]+))?(?:\s*(\d+)?([+-]))?$"
+    m = match(pattern, str)
+    if isnothing(m)
+        return nothing
+    else
+        element_str, mass_str, charge_magnitude, charge_sign = m.captures
+        symbol = Symbol(element_str)
+        mass_number = isnothing(mass_str) ? nothing : parse(Int, mass_str)
+        charge = if isnothing(charge_sign)
+            nothing
+        else
+            magnitude = isnothing(charge_magnitude) ? 1 : parse(Int, charge_magnitude)
+            charge_sign == "+" ? magnitude : -magnitude
+        end
+        return (symbol, charge, mass_number)
+    end
+end
