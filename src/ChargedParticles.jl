@@ -6,41 +6,13 @@ using Mendeleev: elements # for PeriodicTable compatibility
 using Match
 using Unitful: me, mp
 
+include("./aliases.jl")
+include("./display.jl")
+
 export AbstractParticle, Particle, ChargedParticleImpl
 export mass, charge, atomic_number, mass_number
 export is_ion
 export electron, proton
-
-# Common particle aliases
-"""
-    PARTICLE_ALIASES
-
-Dictionary of common particle aliases and their corresponding (symbol, charge, mass_number) tuples.
-
-Each entry maps a string alias to a tuple of (symbol, charge, mass_number)
-"""
-PARTICLE_ALIASES = Dict(
-    "electron" => ("e", -1, 0),
-    "e-" => ("e", -1, 0),
-    "e+" => ("e", 1, 0),
-    "positron" => ("e", 1, 0),
-    "proton" => ("H", 1, 1),
-    "p+" => ("H", 1, 1),
-    "p" => ("H", 1, 1),
-    "neutron" => ("n", 0, 1),
-    "n" => ("n", 0, 1),
-    "alpha" => ("He", 2, 4),
-    "deuteron" => ("H", 1, 2),
-    "D+" => ("H", 1, 2),
-    "tritium" => ("H", 0, 3),
-    "T" => ("H", 0, 3),
-    "triton" => ("H", 1, 3),
-    "T+" => ("H", 1, 3),
-    "mu-" => ("μ", -1, 0),
-    "muon" => ("μ", -1, 0),
-    "antimuon" => ("μ", 1, 0),
-    "mu+" => ("μ", 1, 0),
-)
 
 """
     AbstractParticle
@@ -251,31 +223,9 @@ e = electron()
 println(is_ion(e))  # false
 """
 is_ion(p::AbstractParticle) = !(p.symbol in [:e, :μ]) && p.charge_number != 0
-
 is_chemical_element(p) = haskey(elements, p.symbol) ? true : false
 is_default_isotope(p) = mass_number(p) == element(p).mass_number
 is_electron(p) = p.symbol == :e && p.charge_number == -1 && p.mass == me
 is_proton(p) = p.symbol == :H && p.charge_number == 1 && p.mass_number == 1
-
-# String representation
-function Base.show(io::IO, p::AbstractParticle)
-
-    supercripts = ["", '²', '³', '⁴', '⁵', '⁶', '⁷', '⁸', '⁹']
-
-    charge_str = @match p.charge_number begin
-        x, if x > 0
-        end => "$(supercripts[x])⁺"
-        x, if x < 0
-        end => "$(supercripts[abs(x)])⁻"
-        0 => ""
-    end
-    # if mass number is the default, no need to print it
-    if is_chemical_element(p)
-        mass_number_str = is_default_isotope(p) ? "" : "-$(mass_number(p))"
-    else
-        mass_number_str = ""
-    end
-    print(io, "$(p.symbol)$(mass_number_str)$(charge_str)")
-end
 
 end
