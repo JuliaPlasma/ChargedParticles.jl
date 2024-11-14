@@ -2,7 +2,7 @@
 
 [![Build Status](https://github.com/Beforerr/ChargedParticles.jl/actions/workflows/CI.yml/badge.svg?branch=main)](https://github.com/Beforerr/ChargedParticles.jl/actions/workflows/CI.yml?query=branch%3Amain)
 
-A Julia package for working with charged particles in plasma physics, inspired by PlasmaPy's particles subpackage.
+A Julia package for working with charged particles in plasma physics, inspired by [PlasmaPy](https://github.com/PlasmaPy/PlasmaPy)'s particles subpackage .
 
 ## Features
 
@@ -16,7 +16,7 @@ A Julia package for working with charged particles in plasma physics, inspired b
 
 ```julia
 using Pkg
-Pkg.add(url="path/to/ChargedParticles.jl")
+Pkg.add(url="https://github.com/Beforerr/ChargedParticles.jl")
 ```
 
 ## Usage
@@ -47,8 +47,7 @@ is_ion(he)      # true
 ## Dependencies
 
 - Unitful.jl: For handling physical units
-- UnitfulAtomic.jl: For atomic units
-- PeriodicTable.jl: For element properties
+- [Mendeleev.jl](https://github.com/Eben60/Mendeleev.jl): For periodic table data
 
 ## Contributing
 

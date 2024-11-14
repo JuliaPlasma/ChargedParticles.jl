@@ -1,7 +1,6 @@
 module ChargedParticles
 
 using Unitful
-using UnitfulAtomic
 using Mendeleev
 using Mendeleev: elements # for PeriodicTable compatibility
 using Match
@@ -102,7 +101,7 @@ deuteron = Particle("D+")     # deuterium ion
 iron56 = Particle("Fe-56")    # iron-56 isotope
 ```
 """
-function Particle(str::AbstractString; mass_numb=nothing)
+function Particle(str::AbstractString; mass_numb=nothing, Z=nothing)
     # Check aliases first
     if haskey(PARTICLE_ALIASES, str)
         symbol, charge, mass_number = PARTICLE_ALIASES[str]
@@ -129,8 +128,6 @@ function Particle(str::AbstractString; mass_numb=nothing)
             magnitude = isnothing(charge_magnitude) ? 1 : parse(Int, charge_magnitude)
             charge_sign == "+" ? magnitude : -magnitude
         end
-        # TODO: FIX isotopes mass
-        mass = elements[symbol].atomic_mass
 
         if isnothing(mass_numb) && isnothing(parsed_mass_numb)
             mass_numb = elements[symbol].mass_number
@@ -138,6 +135,13 @@ function Particle(str::AbstractString; mass_numb=nothing)
             mass_numb = parsed_mass_numb
         elseif !isnothing(mass_numb) && !isnothing(parsed_mass_numb)
             @assert mass_numb == parsed_mass_numb
+        end
+
+        for iso in elements[symbol].isotopes
+            if iso.mass_number == mass_numb
+                mass = iso.mass
+                break
+            end
         end
 
         return ChargedParticleImpl(symbol, charge, mass_numb, mass)
