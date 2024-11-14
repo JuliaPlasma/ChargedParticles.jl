@@ -1,6 +1,6 @@
 # Common particle aliases
 
-const ELECTRON_ALIASES = ("electron", "e-", "e+")
+const ELECTRON_ALIASES = ("electron", "e-", "e")
 const PROTON_ALIASES = ("proton", "p+", "p", "H+")
 """
     PARTICLE_ALIASES
