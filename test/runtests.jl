@@ -99,4 +99,12 @@ using Mendeleev: elements
         @test string(Particle("Fe-56")) == "Fe"
         @test string(Particle("Fe-54")) == "Fe-54"
     end
+
+    @testset "Isotope Mass" begin
+        fe56 = elements[:Fe].isotopes[2]
+        fe54 = elements[:Fe].isotopes[1]
+        @test mass(Particle("Fe")) == fe56.mass
+        @test mass(Particle("Fe-56")) == fe56.mass
+        @test mass(Particle("Fe-54")) == fe54.mass
+    end
 end
