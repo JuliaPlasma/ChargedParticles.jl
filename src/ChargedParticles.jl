@@ -7,7 +7,7 @@ using Mendeleev: elements # for PeriodicTable compatibility
 using Match
 using Unitful: me, mp
 
-export Particle
+export AbstractParticle, Particle, ChargedParticleImpl
 export mass, charge, atomic_number, mass_number
 export is_ion
 export electron, proton
@@ -55,7 +55,7 @@ abstract type AbstractParticle end
 """
     ChargedParticleImpl <: AbstractParticle
 
-Internal implementation type for charged particles.
+Implementation type for charged particles.
 
 # Fields
 - `symbol::Symbol`: Chemical symbol or particle identifier (e.g., :Fe, :e, :μ)
@@ -101,10 +101,8 @@ alpha = Particle("He2+")      # alpha particle
 deuteron = Particle("D+")     # deuterium ion
 iron56 = Particle("Fe-56")    # iron-56 isotope
 ```
-
-See also: [`electron`](@ref), [`proton`](@ref)
 """
-function Particle(str::AbstractString)
+function Particle(str::AbstractString; mass_numb=nothing)
     # Check aliases first
     if haskey(PARTICLE_ALIASES, str)
         symbol, charge, mass_number = PARTICLE_ALIASES[str]
@@ -123,7 +121,7 @@ function Particle(str::AbstractString)
         element_str, mass_str, charge_magnitude, charge_sign = m.captures
         # Parse 
         symbol = Symbol(element_str)
-        mass_number = isnothing(mass_str) ? elements[symbol].mass_number : parse(Int, mass_str)
+        parsed_mass_numb = isnothing(mass_str) ? nothing : parse(Int, mass_str)
         # Get charge
         charge = if isnothing(charge_sign)
             0
@@ -132,7 +130,16 @@ function Particle(str::AbstractString)
             charge_sign == "+" ? magnitude : -magnitude
         end
         mass = elements[symbol].atomic_mass
-        return ChargedParticleImpl(symbol, charge, mass_number, mass)
+
+        if isnothing(mass_numb) && isnothing(parsed_mass_numb)
+            mass_numb = elements[symbol].mass_number
+        elseif isnothing(mass_numb) && !isnothing(parsed_mass_numb)
+            mass_numb = parsed_mass_numb
+        elseif !isnothing(mass_numb) && !isnothing(parsed_mass_numb)
+            @assert mass_numb == parsed_mass_numb
+        end
+
+        return ChargedParticleImpl(symbol, charge, mass_numb, mass)
     end
     throw(ArgumentError("Invalid particle string format: $str"))
 end
@@ -167,7 +174,9 @@ function Particle(atomic_number::Int; mass_numb=nothing, Z=0)
 end
 
 # Convenience constructors for common particles
+"""Create an electron"""
 electron() = ChargedParticleImpl(:e, -1, 0, me)
+"""Create a proton"""
 proton() = ChargedParticleImpl(:H, 1, 1, mp)
 
 # Basic properties
