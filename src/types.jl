@@ -126,14 +126,16 @@ Create a particle from its atomic number with optional mass number and charge st
 - `Z=0`: Optional charge number (in elementary charge units)
 
 # Examples
-```julia
+```jldoctest; output = false
 # Basic construction
 iron = Particle(26)        # Iron
 u = Particle(92)          # Uranium
 
 # With mass number and charge
 fe56_3plus = Particle(26, mass_numb=56, Z=3)  # Fe-56³⁺
-he4_2plus = Particle(2, mass_numb=4, Z=2)     # He⁴²⁺ (alpha particle)
+he4_2plus = Particle(2, mass_numb=4, Z=2)     # ⁴He²⁺ (alpha particle)
+# output
+He²⁺
 ```
 
 See also: [`Particle(::AbstractString)`](@ref)
