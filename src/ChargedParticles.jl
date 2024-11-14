@@ -36,49 +36,59 @@ const PARTICLE_ALIASES = Dict(
     "mu+" => ("μ", 1, 0),
 )
 
-"""
-Abstract type representing any particle in plasma physics
-"""
 abstract type AbstractParticle end
 
 """
-    ChargedParticleImpl
+    ChargedParticleImpl <: AbstractParticle
 
-Internal implementation of a charged particle with properties like mass, charge, and atomic properties.
+Internal implementation type for charged particles.
 
 # Fields
-
-- symbol::Symbol : Chemical symbol of the particle
-- charge_number::Int : Number of elementary charges (can be negative)
-- mass_number::Int : Total number of nucleons (protons + neutrons) (for elements, the most abundant isotope)
+- `symbol::Symbol`: Chemical symbol or particle identifier (e.g., :Fe, :e, :μ)
+- `charge_number::Int`: Number of elementary charges (can be negative)
+- `mass_number::Int`: Total number of nucleons (protons + neutrons)
+- `mass::Unitful.Mass`: Mass of the particle in appropriate units
 
 # Notes
-- Charge number : electrical charge in units of the elementary charge, usually denoted as z. # https://en.wikipedia.org/wiki/Charge_number
+- Mass number : For elementary particles like electrons and muons, `mass_number` is 0
+- Charge number : electrical charge in units of the elementary charge, usually denoted as z. https://en.wikipedia.org/wiki/Charge_number
 """
 @kwdef struct ChargedParticleImpl <: AbstractParticle
     symbol::Symbol
     charge_number::Int
-    # atomic_number::Int
     mass_number::Int
     mass::Unitful.Mass
 end
 
 """
-    Particle(particle_string::AbstractString)
+    Particle(str::AbstractString)
 
 Create a particle from a string representation.
-Supports various formats:
-- Element symbols with optional mass number and charge (e.g., "Fe-56", "H+", "He2+")
-- Common particle names (e.g., "electron", "proton", "alpha")
-- Special particles (e.g., "e-", "mu+", "D+")
 
-Examples:
+# Arguments
+- `str::AbstractString`: String representation of the particle
+
+# String Format Support
+- Element symbols: `"Fe"`, `"He"`
+- Isotopes: `"Fe-56"`, `"D"`
+- Ions: `"Fe2+"`, `"H-"`
+- Common aliases: `"electron"`, `"proton"`, `"alpha"`, `"mu-"`
+
+# Examples
 ```julia
-electron = Particle("e-")
-alpha = Particle("alpha")
-deuteron = Particle("D+")
-iron56 = Particle("Fe-56")
+# Elementary particles
+electron = Particle("e-")     # electron
+muon = Particle("mu-")        # muon
+positron = Particle("e+")     # positron
+
+# Ions and isotopes
+proton = Particle("H+")       # proton
+alpha = Particle("He2+")      # alpha particle
+deuteron = Particle("D+")     # deuterium ion
+iron56 = Particle("Fe-56")    # iron-56 isotope
 ```
+
+See also: [`electron`](@ref), [`proton`](@ref)
 """
 function Particle(str::AbstractString)
     # Check aliases first
@@ -151,13 +161,7 @@ function atomic_number(p::AbstractParticle)
 end
 
 """Return the mass number (total number of nucleons)"""
-function mass_number(p::AbstractParticle)
-    if p.symbol in [:e, :μ, :n]
-        return 0
-    else
-        return p.mass_number
-    end
-end
+mass_number(p::AbstractParticle) = p.mass_number
 
 # Type checking functions
 is_ion(p::AbstractParticle) = !(p.symbol in [:e, :μ]) && p.charge_number != 0
