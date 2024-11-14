@@ -3,4 +3,4 @@ servedocs:
     using Pkg
     Pkg.develop(PackageSpec(path=pwd()))
     using ChargedParticles, LiveServer;
-    servedocs()
+    servedocs(include_dirs=["src/"])
