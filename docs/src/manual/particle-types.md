@@ -35,16 +35,40 @@ Each particle has four fundamental properties:
    - For regular elements: most abundant isotope
 
 4. **Mass** (`mass::Unitful.Mass`): Particle mass
-   - Uses appropriate units from Unitful.jl
-   - Elementary particles: electron mass units (me)
-   - Atoms and ions: atomic mass units (u)
+
+Other properties derived from the above:
+
+- **Atomic Number (Z)** (`atomic_number\Z::Int`): Number of protons in the particle
+
+- **Charge (q)** (`charge\q::Unitful.Charge`): Particle charge
+
+- **Element** (`element::Element`): Element associated with the particle
+
+Accessing particle properties could be done using dot notation: `particle.{property_name}` or `{property_name}(particle)`.
+
+```@example share
+using ChargedParticles # hide
+e = electron()
+e.mass, mass(e)
+```
+
+More properties (fields) about the element could be found in the [Mendeleev.jl](https://eben60.github.io/Mendeleev.jl/elements_data_fields/). These fields could be accessed by `particle.element.{field_name}` or `element(particle).{field_name}`.
+
+```@example share
+p = Particle("Fe")
+@show propertynames(p.element);
+```
+
+```@example share
+p.element
+```
 
 ## Supported Particle Categories
 
 ### Elementary Particles
 
 ```@example
-using ChargedParticles
+using ChargedParticles # hide
 
 # Electron
 e = electron()
