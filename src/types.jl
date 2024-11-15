@@ -97,6 +97,23 @@ H⁺
 Particle(sym::Symbol; kwargs...) = Particle(string(sym); kwargs...)
 
 """
+    Particle(p::AbstractParticle)
+
+Create a particle from another particle implementation, optionally specifying mass number and charge to override.
+
+# Examples
+```jldoctest; output = false
+p = Particle("Fe2+")
+p2 = Particle(p)  # Creates a new instance with same properties
+```
+"""
+function Particle(p::AbstractParticle; mass_numb=nothing, Z=nothing)
+    mass_number = something(mass_numb, p.mass_number)
+    charge_number = something(Z, p.charge_number)
+    ChargedParticleImpl(p.symbol, charge_number, mass_number)
+end
+
+"""
     Particle(atomic_number::Int; mass_numb=nothing, Z=0)
 
 Create a particle from its atomic number with optional mass number and charge state.
@@ -123,7 +140,7 @@ See also: [`Particle(::AbstractString)`](@ref)
 """
 function Particle(atomic_number::Int; mass_numb=nothing, Z=0)
     element = elements[atomic_number]
-    mass_number = isnothing(mass_numb) ? element.mass_number : mass_numb
+    mass_number = something(mass_numb, element.mass_number)
     ChargedParticleImpl(element.symbol, Z, mass_number)
 end
 
