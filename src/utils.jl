@@ -110,3 +110,13 @@ function parse_particle_string(str::AbstractString)
         return (symbol, charge, mass_number)
     end
 end
+
+function _format_energy(erg::Unitful.Energy)
+    if erg > 1u"MeV"
+        return uconvert(u"MeV", erg)
+    elseif erg > 1u"keV"
+        return uconvert(u"keV", erg)
+    else
+        return erg
+    end
+end

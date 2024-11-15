@@ -1,4 +1,4 @@
-const calculated_properties = (:charge, :atomic_number, :Z, :element)
+const calculated_properties = (:charge, :atomic_number, :Z, :element, :mass_energy)
 const synonym_fields = Dict(:z => :charge_number, :A => :mass_number)
 
 """Retrieve the mass of an element isotope."""
@@ -62,6 +62,8 @@ function element(p::AbstractParticle)
         _ => return elements[p.symbol]
     end
 end
+
+mass_energy(p::AbstractParticle) = _format_energy(uconvert(u"eV", p.mass * Unitful.c^2))
 
 function property_function(s::Symbol)
     @match s begin
