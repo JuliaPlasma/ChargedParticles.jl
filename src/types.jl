@@ -31,7 +31,7 @@ Implementation type for charged particles.
 end
 
 """
-    Particle(str::AbstractString; mass_numb=nothing, Z=nothing)
+    Particle(str::AbstractString; mass_numb=nothing, z=nothing)
 
 Create a particle from a string representation.
 
@@ -60,7 +60,7 @@ iron56 = Particle("Fe-56")
 Fe
 ```
 """
-function Particle(str::AbstractString; mass_numb=nothing, Z=nothing)
+function Particle(str::AbstractString; mass_numb=nothing, z=nothing)
     # Check aliases first
     if haskey(PARTICLE_ALIASES, str)
         symbol, charge, mass_number = PARTICLE_ALIASES[str]
@@ -72,7 +72,7 @@ function Particle(str::AbstractString; mass_numb=nothing, Z=nothing)
     if !isnothing(result)
         (symbol, parsed_charge, parsed_mass_numb) = result
         element = elements[symbol]
-        charge = determine(parsed_charge, Z; default=0)
+        charge = determine(parsed_charge, z; default=0)
         mass_number = determine(parsed_mass_numb, mass_numb; default=element.mass_number)
         return ChargedParticleImpl(symbol, charge, mass_number)
     end
@@ -104,26 +104,26 @@ Create a particle from another particle implementation, optionally specifying ma
 # Examples
 ```jldoctest; output = false
 p = Particle("Fe2+")
-p2 = Particle(p; mass_numb=54, Z=3)  # Creates a new instance with same properties
+p2 = Particle(p; mass_numb=54, z=3)  # Creates a new instance with same properties
 # output
 Fe-54³⁺
 ```
 """
-function Particle(p::AbstractParticle; mass_numb=nothing, Z=nothing)
+function Particle(p::AbstractParticle; mass_numb=nothing, z=nothing)
     mass_number = something(mass_numb, p.mass_number)
-    charge_number = something(Z, p.charge_number)
+    charge_number = something(z, p.charge_number)
     ChargedParticleImpl(p.symbol, charge_number, mass_number)
 end
 
 """
-    Particle(atomic_number::Int; mass_numb=nothing, Z=0)
+    Particle(atomic_number::Int; mass_numb=nothing, z=0)
 
 Create a particle from its atomic number with optional mass number and charge state.
 
 # Arguments
 - `atomic_number::Int`: The atomic number (number of protons)
 - `mass_numb=nothing`: Optional mass number (total number of nucleons)
-- `Z=0`: Optional charge number (in elementary charge units)
+- `z=0`: Optional charge number (in elementary charge units)
 
 # Examples
 ```jldoctest; output = false
@@ -132,18 +132,18 @@ iron = Particle(26)        # Iron
 u = Particle(92)          # Uranium
 
 # With mass number and charge
-fe56_3plus = Particle(26, mass_numb=56, Z=3)  # Fe-56³⁺
-he4_2plus = Particle(2, mass_numb=4, Z=2)     # ⁴He²⁺ (alpha particle)
+fe56_3plus = Particle(26, mass_numb=56, z=3)  # Fe-56³⁺
+he4_2plus = Particle(2, mass_numb=4, z=2)     # ⁴He²⁺ (alpha particle)
 # output
 He²⁺
 ```
 
 See also: [`Particle(::AbstractString)`](@ref)
 """
-function Particle(atomic_number::Int; mass_numb=nothing, Z=0)
+function Particle(atomic_number::Int; mass_numb=nothing, z=0)
     element = elements[atomic_number]
     mass_number = something(mass_numb, element.mass_number)
-    ChargedParticleImpl(element.symbol, Z, mass_number)
+    ChargedParticleImpl(element.symbol, z, mass_number)
 end
 
 # Convenience constructors for common particles
