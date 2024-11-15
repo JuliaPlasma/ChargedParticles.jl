@@ -29,7 +29,7 @@ p = proton()
 
 # Using atomic numbers
 iron = Particle(26)  # Fe
-helium = Particle(2, mass_numb=4, Z=2)  # He⁴²⁺
+helium = Particle(2, mass_numb=4, z=2)  # He⁴²⁺
 ``` 
 
 ### Accessing Properties

@@ -21,7 +21,7 @@ fe2 = Particle("Fe2-")  # Iron(-II)
 fe56 = Particle("Fe-56")  # Iron-56
 u235 = Particle("U-235")  # Uranium-235
 
-println("Iron: Z = $(atomic_number(fe))")
+println("Iron: z = $(atomic_number(fe))")
 println("Iron(III): charge = $(charge(fe3))")
 println("Iron-56: A = $(mass_number(fe56))")
 ```
@@ -63,7 +63,7 @@ d = Particle("deuteron")  # D⁺
 t = Particle("triton")    # T⁺
 
 println("Electron charge: $(charge(e))")
-println("Alpha particle: Z = $(atomic_number(α)), A = $(mass_number(α))")
+println("Alpha particle: z = $(atomic_number(α)), A = $(mass_number(α))")
 println("Deuteron mass number: $(mass_number(d))")
 ```
 
@@ -79,11 +79,11 @@ fe = Particle(26)        # Iron
 u = Particle(92)         # Uranium
 
 # With mass number and charge
-fe56_3plus = Particle(26, mass_numb=56, Z=3)  # Fe-56³⁺
-u235_2plus = Particle(92, mass_numb=235, Z=2)  # U-235²⁺
+fe56_3plus = Particle(26, mass_numb=56, z=3)  # Fe-56³⁺
+u235_2plus = Particle(92, mass_numb=235, z=2)  # U-235²⁺
 
-println("Iron: Z = $(atomic_number(fe))")
-println("U-235²⁺: Z = $(atomic_number(u235_2plus)), A = $(mass_number(u235_2plus))")
+println("Iron: z = $(atomic_number(fe))")
+println("U-235²⁺: z = $(atomic_number(u235_2plus)), A = $(mass_number(u235_2plus))")
 ```
 
 ## Convenience Constructors

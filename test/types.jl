@@ -43,9 +43,9 @@ end
 @testset "String constructor with keywords" begin
     @test Particle("Fe").charge_number == 0
     @test Particle("Fe 2+").charge_number == 2
-    @test Particle("Fe"; Z=2).charge_number == 2
-    @test Particle("Fe 2+"; Z=2).charge_number == 2
-    @test_throws ArgumentError Particle("Fe 2+"; Z=3)
+    @test Particle("Fe"; z=2).charge_number == 2
+    @test Particle("Fe 2+"; z=2).charge_number == 2
+    @test_throws ArgumentError Particle("Fe 2+"; z=3)
 
     @test Particle("Fe").mass_number == 56
     @test Particle("Fe-54").mass_number == 54
@@ -60,7 +60,7 @@ end
     @test atomic_number(iron) == 26
 
     # Test with mass number and charge
-    he4 = Particle(2; mass_numb=4, Z=2)
+    he4 = Particle(2; mass_numb=4, z=2)
     @test atomic_number(he4) == 2
     @test mass_number(he4) == 4
     @test charge(he4) == 2q
@@ -71,8 +71,8 @@ end
 end
 
 @testset "Construct from AbstractParticle" begin
-    p1 = Particle("Fe"; mass_numb=56, Z=2)
-    p2 = Particle(p1; mass_numb=54, Z=3)
+    p1 = Particle("Fe"; mass_numb=56, z=2)
+    p2 = Particle(p1; mass_numb=54, z=3)
     @test p2.symbol == p1.symbol
     @test p2.charge_number == 3
     @test p2.mass_number == 54
