@@ -13,6 +13,7 @@ include("./properties.jl")
 include("./aliases.jl")
 include("./utils.jl")
 include("./display.jl")
+include("./_special_particles.jl")
 
 export AbstractParticle, Particle, ChargedParticleImpl
 export mass, charge, atomic_number, mass_number, element
