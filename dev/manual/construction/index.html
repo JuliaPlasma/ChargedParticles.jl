@@ -13,9 +13,9 @@ fe2 = Particle(&quot;Fe2-&quot;)  # Iron(-II)
 fe56 = Particle(&quot;Fe-56&quot;)  # Iron-56
 u235 = Particle(&quot;U-235&quot;)  # Uranium-235
 
-println(&quot;Iron: Z = $(atomic_number(fe))&quot;)
+println(&quot;Iron: z = $(atomic_number(fe))&quot;)
 println(&quot;Iron(III): charge = $(charge(fe3))&quot;)
-println(&quot;Iron-56: A = $(mass_number(fe56))&quot;)</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">Iron: Z = 26
+println(&quot;Iron-56: A = $(mass_number(fe56))&quot;)</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">Iron: z = 26
 Iron(III): charge = 4.806529901999999e-19 C
 Iron-56: A = 56</code></pre><h3 id="String-Format-Rules"><a class="docs-heading-anchor" href="#String-Format-Rules">String Format Rules</a><a id="String-Format-Rules-1"></a><a class="docs-heading-anchor-permalink" href="#String-Format-Rules" title="Permalink"></a></h3><ol><li><p><strong>Basic Elements</strong></p><ul><li>Just the symbol: <code>&quot;Fe&quot;</code>, <code>&quot;He&quot;</code>, <code>&quot;U&quot;</code></li><li>Case sensitive: <code>&quot;Fe&quot;</code> works, <code>&quot;FE&quot;</code> doesn&#39;t</li></ul></li><li><p><strong>Ions</strong></p><ul><li>Append charge: <code>&quot;Fe3+&quot;</code>, <code>&quot;Fe2-&quot;</code></li><li>Format: <code>SYMBOL</code> + <code>NUMBER</code> + <code>+/-</code></li><li>Examples: <code>&quot;Fe3+&quot;</code>, <code>&quot;Cl-&quot;</code>, <code>&quot;Ca2+&quot;</code></li></ul></li><li><p><strong>Isotopes</strong></p><ul><li>Format: <code>SYMBOL</code> + <code>-</code> + <code>MASS_NUMBER</code></li><li>Examples: <code>&quot;Fe-56&quot;</code>, <code>&quot;U-235&quot;</code>, <code>&quot;C-14&quot;</code></li></ul></li><li><p><strong>Combined Isotopes and Ions</strong></p><ul><li>Format: <code>SYMBOL</code> + <code>-</code> + <code>MASS_NUMBER</code> + <code>NUMBER</code> + <code>+/-</code></li><li>Examples: <code>&quot;Fe-56_3+&quot;</code>, <code>&quot;U-235_2+&quot;</code></li></ul></li></ol><h2 id="Common-Particle-Aliases"><a class="docs-heading-anchor" href="#Common-Particle-Aliases">Common Particle Aliases</a><a id="Common-Particle-Aliases-1"></a><a class="docs-heading-anchor-permalink" href="#Common-Particle-Aliases" title="Permalink"></a></h2><p>Many common particles have predefined aliases:</p><pre><code class="language-julia hljs">using ChargedParticles
 
@@ -30,9 +30,9 @@ d = Particle(&quot;deuteron&quot;)  # D⁺
 t = Particle(&quot;triton&quot;)    # T⁺
 
 println(&quot;Electron charge: $(charge(e))&quot;)
-println(&quot;Alpha particle: Z = $(atomic_number(α)), A = $(mass_number(α))&quot;)
+println(&quot;Alpha particle: z = $(atomic_number(α)), A = $(mass_number(α))&quot;)
 println(&quot;Deuteron mass number: $(mass_number(d))&quot;)</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">Electron charge: -1.602176634e-19 C
-Alpha particle: Z = 2, A = 4
+Alpha particle: z = 2, A = 4
 Deuteron mass number: 2</code></pre><h2 id="Atomic-Number-Constructor"><a class="docs-heading-anchor" href="#Atomic-Number-Constructor">Atomic Number Constructor</a><a id="Atomic-Number-Constructor-1"></a><a class="docs-heading-anchor-permalink" href="#Atomic-Number-Constructor" title="Permalink"></a></h2><p>You can also create particles using their atomic numbers:</p><pre><code class="language-julia hljs">using ChargedParticles
 
 # Basic construction
@@ -40,12 +40,12 @@ fe = Particle(26)        # Iron
 u = Particle(92)         # Uranium
 
 # With mass number and charge
-fe56_3plus = Particle(26, mass_numb=56, Z=3)  # Fe-56³⁺
-u235_2plus = Particle(92, mass_numb=235, Z=2)  # U-235²⁺
+fe56_3plus = Particle(26, mass_numb=56, z=3)  # Fe-56³⁺
+u235_2plus = Particle(92, mass_numb=235, z=2)  # U-235²⁺
 
-println(&quot;Iron: Z = $(atomic_number(fe))&quot;)
-println(&quot;U-235²⁺: Z = $(atomic_number(u235_2plus)), A = $(mass_number(u235_2plus))&quot;)</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">Iron: Z = 26
-U-235²⁺: Z = 92, A = 235</code></pre><h2 id="Convenience-Constructors"><a class="docs-heading-anchor" href="#Convenience-Constructors">Convenience Constructors</a><a id="Convenience-Constructors-1"></a><a class="docs-heading-anchor-permalink" href="#Convenience-Constructors" title="Permalink"></a></h2><p>The most common particles have dedicated constructors:</p><pre><code class="language-julia hljs">using ChargedParticles
+println(&quot;Iron: z = $(atomic_number(fe))&quot;)
+println(&quot;U-235²⁺: z = $(atomic_number(u235_2plus)), A = $(mass_number(u235_2plus))&quot;)</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">Iron: z = 26
+U-235²⁺: z = 92, A = 235</code></pre><h2 id="Convenience-Constructors"><a class="docs-heading-anchor" href="#Convenience-Constructors">Convenience Constructors</a><a id="Convenience-Constructors-1"></a><a class="docs-heading-anchor-permalink" href="#Convenience-Constructors" title="Permalink"></a></h2><p>The most common particles have dedicated constructors:</p><pre><code class="language-julia hljs">using ChargedParticles
 
 # Using convenience constructors
 e = electron()
@@ -67,4 +67,4 @@ try
 catch e
     println(&quot;Error: &quot;, e)
 end</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">Error: KeyError(:XX)
-Error: KeyError(-1)</code></pre></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../particle-types/">« Particle Types</a><a class="docs-footer-nextpage" href="../../api/">API Reference »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="auto">Automatic (OS)</option><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option><option value="catppuccin-latte">catppuccin-latte</option><option value="catppuccin-frappe">catppuccin-frappe</option><option value="catppuccin-macchiato">catppuccin-macchiato</option><option value="catppuccin-mocha">catppuccin-mocha</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 1.8.0 on <span class="colophon-date" title="Friday 15 November 2024 19:33">Friday 15 November 2024</span>. Using Julia version 1.11.1.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
+Error: KeyError(-1)</code></pre></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../particle-types/">« Particle Types</a><a class="docs-footer-nextpage" href="../../api/">API Reference »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="auto">Automatic (OS)</option><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option><option value="catppuccin-latte">catppuccin-latte</option><option value="catppuccin-frappe">catppuccin-frappe</option><option value="catppuccin-macchiato">catppuccin-macchiato</option><option value="catppuccin-mocha">catppuccin-mocha</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 1.8.0 on <span class="colophon-date" title="Friday 15 November 2024 21:55">Friday 15 November 2024</span>. Using Julia version 1.11.1.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
