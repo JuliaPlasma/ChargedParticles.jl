@@ -17,7 +17,7 @@ The package uses a simple two-level type hierarchy:
 
 ## Particle Properties
 
-Each particle has four fundamental properties:
+Each particle has three fundamental properties:
 
 1. **Symbol** (`symbol::Symbol`): Chemical symbol or particle identifier
    - Regular elements: `:Fe`, `:He`, etc.
@@ -34,13 +34,16 @@ Each particle has four fundamental properties:
    - For elementary particles: `0`
    - For regular elements: most abundant isotope
 
-4. **Mass** (`mass::Unitful.Mass`): Particle mass
-
 Other properties derived from the above:
 
-- **Atomic Number (Z)** (`atomic_number\Z::Int`): Number of protons in the particle
+-  **Mass** (`mass::Unitful.Mass`): Particle mass
+   - Calculated from the particle's symbol and mass number
+   - Elementary particles: predefined constants (me, mμ, etc.)
+   - Atoms and ions: looked up from isotope data
 
 - **Charge (q)** (`charge\q::Unitful.Charge`): Particle charge
+
+- **Atomic Number (Z)** (`atomic_number\Z::Int`): Number of protons in the particle
 
 - **Element** (`element::Element`): Element associated with the particle
 

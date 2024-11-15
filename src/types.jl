@@ -19,7 +19,6 @@ Implementation type for charged particles.
 - `symbol::Symbol`: Chemical symbol or particle identifier (e.g., :Fe, :e, :μ)
 - `charge_number::Int`: Number of elementary charges (can be negative)
 - `mass_number::Int`: Total number of nucleons (protons + neutrons)
-- `mass::Unitful.Mass`: Mass of the particle in appropriate units
 
 # Notes
 - Mass number : For elementary particles like electrons and muons, `mass_number` is 0
@@ -29,7 +28,6 @@ Implementation type for charged particles.
     symbol::Symbol
     charge_number::Int
     mass_number::Int
-    mass::Unitful.Mass
 end
 
 """
@@ -66,14 +64,7 @@ function Particle(str::AbstractString; mass_numb=nothing, Z=nothing)
     # Check aliases first
     if haskey(PARTICLE_ALIASES, str)
         symbol, charge, mass_number = PARTICLE_ALIASES[str]
-        # Get mass based on particle type
-        mass = @match symbol begin
-            "e" => me
-            "μ" => 206.7682827me
-            "n" => Unitful.mn
-            _ => elements[Symbol(symbol)].atomic_mass
-        end
-        return ChargedParticleImpl(Symbol(symbol), charge, mass_number, mass)
+        return ChargedParticleImpl(Symbol(symbol), charge, mass_number)
     end
 
     # Try to parse as element with optional mass number and charge
@@ -83,8 +74,7 @@ function Particle(str::AbstractString; mass_numb=nothing, Z=nothing)
         element = elements[symbol]
         charge = determine(parsed_charge, Z; default=0)
         mass_number = determine(parsed_mass_numb, mass_numb; default=element.mass_number)
-        mass = ChargedParticles.mass(element, mass_number)
-        return ChargedParticleImpl(symbol, charge, mass_number, mass)
+        return ChargedParticleImpl(symbol, charge, mass_number)
     end
     throw(ArgumentError("Invalid particle string format: $str"))
 end
@@ -134,12 +124,11 @@ See also: [`Particle(::AbstractString)`](@ref)
 function Particle(atomic_number::Int; mass_numb=nothing, Z=0)
     element = elements[atomic_number]
     mass_number = isnothing(mass_numb) ? element.mass_number : mass_numb
-    mass = ChargedParticles.mass(element, mass_number)
-    ChargedParticleImpl(element.symbol, Z, mass_number, mass)
+    ChargedParticleImpl(element.symbol, Z, mass_number)
 end
 
 # Convenience constructors for common particles
 """Create an electron"""
-electron() = ChargedParticleImpl(:e, -1, 0, me)
+electron() = ChargedParticleImpl(:e, -1, 0)
 """Create a proton"""
-proton() = ChargedParticleImpl(:p, 1, 1, mp)
+proton() = ChargedParticleImpl(:p, 1, 1)

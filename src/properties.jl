@@ -1,4 +1,4 @@
-const calculated_properties = (:charge, :atomic_number, :element, :mass_energy)
+const calculated_properties = (:charge, :atomic_number, :element, :mass_energy, :mass)
 const properties_fn_map = Dict()
 const synonym_properties = Dict(
     :A => :mass_number,
@@ -21,7 +21,23 @@ end
 
 # Basic properties
 """Return the mass of the particle in atomic mass units"""
-mass(p::AbstractParticle) = p.mass
+function mass(p::AbstractParticle)
+    @match p.symbol begin
+        :e => return me
+        :μ => return 206.7682827me
+        :n => return Unitful.mn
+        :p => return mp
+        _ => begin
+            e = element(p)
+            for iso in e.isotopes
+                if iso.mass_number == p.mass_number
+                    return iso.mass
+                end
+            end
+            throw(ArgumentError("No isotope found with mass number $(p.mass_number) for element $e"))
+        end
+    end
+end
 
 """Return the electric charge of the particle in elementary charge units"""
 charge(p::AbstractParticle) = p.charge_number * Unitful.q
