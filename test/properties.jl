@@ -9,7 +9,7 @@ p = Particle("Fe 2+")
 @test p.mass_number == 56
 @test p.Z == 26
 @test p.atomic_number == 26
-@test p.mass ≈ 55.934936u"u"
+@test p.mass ≈ 55.934936u"u" - 2me
 @test p.element == elements[:Fe]
 
 e = electron()

@@ -20,22 +20,11 @@ end
 
 
 # Basic properties
-"""Return the mass of the particle in atomic mass units"""
+"""Return the mass of the particle"""
 function mass(p::AbstractParticle)
-    @match p.symbol begin
-        :e => return me
-        :μ => return 206.7682827me
-        :n => return Unitful.mn
-        :p => return mp
-        _ => begin
-            e = element(p)
-            for iso in e.isotopes
-                if iso.mass_number == p.mass_number
-                    return iso.mass
-                end
-            end
-            throw(ArgumentError("No isotope found with mass number $(p.mass_number) for element $e"))
-        end
+    get(mass_dicts, p.symbol) do
+        base_mass = mass(p.element, p.mass_number)
+        return base_mass - p.charge_number * Unitful.me
     end
 end
 
