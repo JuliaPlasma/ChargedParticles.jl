@@ -104,7 +104,9 @@ Create a particle from another particle implementation, optionally specifying ma
 # Examples
 ```jldoctest; output = false
 p = Particle("Fe2+")
-p2 = Particle(p)  # Creates a new instance with same properties
+p2 = Particle(p; mass_numb=54, Z=3)  # Creates a new instance with same properties
+# output
+Fe-54³⁺
 ```
 """
 function Particle(p::AbstractParticle; mass_numb=nothing, Z=nothing)
