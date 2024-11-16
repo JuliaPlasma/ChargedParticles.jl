@@ -13,10 +13,9 @@ ChargedParticles.jl provides a flexible type system for working with various par
 ## Features
 
 - Support for elementary particles, ions, and isotopes
-- Flexible string-based particle construction
-- Physical properties (mass, charge, etc.)
-- Common particle aliases
-- Unit support via Unitful.jl
+- Flexible string-based particle construction with common particle aliases
+- Physical properties (mass, charge, atomic number, charge number, etc.)
+- Integration with [Mendeleev.jl](https://github.com/Eben60/Mendeleev.jl) for chemical element data
 
 ## Installation
 

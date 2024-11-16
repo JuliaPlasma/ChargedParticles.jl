@@ -7,11 +7,10 @@ A Julia package for working with charged particles in plasma physics, inspired b
 
 ## Features
 
-- Support for common particles (electrons, protons)
-- Custom ion creation with arbitrary charge states
-- Basic particle properties (mass, charge, atomic number)
-- Type checking functions (is_electron, is_proton, is_ion)
-- Pretty printing of particle representations
+- Support for elementary particles, ions, and isotopes
+- Flexible string-based particle construction with common particle aliases
+- Physical properties (mass, charge, atomic number, charge number, etc.)
+- Integration with [Mendeleev.jl](https://github.com/Eben60/Mendeleev.jl) for chemical element data
 
 ## Installation
 
