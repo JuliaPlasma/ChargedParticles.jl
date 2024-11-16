@@ -11,7 +11,6 @@ Order = [:type]
 ## Constructors
 
 ```@docs
-Particle
 proton
 electron
 ```

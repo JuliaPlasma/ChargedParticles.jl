@@ -18,7 +18,7 @@ Implementation type for charged particles.
 # Fields
 - `symbol::Symbol`: Chemical symbol or particle identifier (e.g., :Fe, :e, :μ)
 - `charge_number::Int`: Number of elementary charges (can be negative)
-- `mass_number::Int`: Total number of nucleons (protons + neutrons)
+- `mass_number::Int`: Total number of nucleons (protons + neutrons). If not provided, defaults to the most common isotope mass number
 
 # Notes
 - Mass number : For elementary particles like electrons and muons, `mass_number` is 0
@@ -35,7 +35,14 @@ struct Particle <: AbstractParticle
     symbol::Symbol
     charge_number::Int
     mass_number::Int
-
+    function Particle(symbol, charge_number, mass_number=nothing)
+        if isnothing(mass_number)
+            mass_number = elements[symbol].mass_number
+        else
+            mass_number >= 0 || throw(ArgumentError("Mass number must be non-negative, got $mass_number"))
+        end
+        new(symbol, charge_number, mass_number)
+    end
 end
 
 """

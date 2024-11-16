@@ -35,15 +35,15 @@ p = proton()         # proton
 α = Particle("alpha") # alpha particle
 
 # Create ions and isotopes
-fe3 = Particle("Fe3+")     # Iron(III) ion
-fe56 = Particle("Fe-56")   # Iron-56
+fe = Particle("Fe-56 3+")     # Iron(III) ion
+fe54 = Particle(:Fe, 3, 54)
 d = Particle("D+")         # Deuteron
 
 # Access properties
 println("Electron mass: ", mass(e))
 println("Alpha particle charge: ", charge(α))
-println("Iron charge: ", charge(fe3))
-println("Iron-56 mass number: ", mass_number(fe56))
+println("Iron(III) ion charge: ", charge(fe))
+println("Iron-54 mass number: ", mass_number(fe54))
 println("Deuteron mass: ", mass(d))
 ```
 
