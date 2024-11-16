@@ -79,10 +79,10 @@ end
 
 mass_energy(p::AbstractParticle) = _format_energy(uconvert(u"eV", p.mass * Unitful.c^2))
 
-function Base.getproperty(p::ChargedParticleImpl, s::Symbol)
+function Base.getproperty(p::Particle, s::Symbol)
     s in calculated_properties && return eval(get(properties_fn_map, s, s))(p)
     s in keys(synonym_properties) && return getproperty(p, synonym_properties[s])
     return getfield(p, s)
 end
 
-Base.propertynames(p::ChargedParticleImpl) = (sort ∘ collect ∘ union)(keys(synonym_properties), calculated_properties, fieldnames(ChargedParticleImpl))
+Base.propertynames(p::Particle) = (sort ∘ collect ∘ union)(keys(synonym_properties), calculated_properties, fieldnames(Particle))

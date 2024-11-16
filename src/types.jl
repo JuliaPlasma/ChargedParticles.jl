@@ -3,7 +3,7 @@
 
 Abstract type representing any particle in plasma physics.
 
-See also: [`ChargedParticleImpl`](@ref)
+See also: [`Particle`](@ref)
 """
 abstract type AbstractParticle end
 
@@ -11,7 +11,7 @@ abstract type AbstractParticle end
 const ParticleLike = Union{AbstractParticle,Symbol,AbstractString}
 
 """
-    ChargedParticleImpl <: AbstractParticle
+    Particle <: AbstractParticle
 
 Implementation type for charged particles.
 
@@ -23,11 +23,19 @@ Implementation type for charged particles.
 # Notes
 - Mass number : For elementary particles like electrons and muons, `mass_number` is 0
 - Charge number : electrical charge in units of the elementary charge, usually denoted as z. https://en.wikipedia.org/wiki/Charge_number
+
+# Examples
+```jldoctest
+Particle(:Fe, 2)  # Creates Fe²⁺ with default mass number
+# output
+Fe²⁺
+```
 """
-@kwdef struct ChargedParticleImpl <: AbstractParticle
+struct Particle <: AbstractParticle
     symbol::Symbol
     charge_number::Int
     mass_number::Int
+
 end
 
 """
@@ -64,7 +72,7 @@ function Particle(str::AbstractString; mass_numb=nothing, z=nothing)
     # Check aliases first
     if haskey(PARTICLE_ALIASES, str)
         symbol, charge, mass_number = PARTICLE_ALIASES[str]
-        return ChargedParticleImpl(Symbol(symbol), charge, mass_number)
+        return Particle(Symbol(symbol), charge, mass_number)
     end
 
     # Try to parse as element with optional mass number and charge
@@ -74,7 +82,7 @@ function Particle(str::AbstractString; mass_numb=nothing, z=nothing)
         element = elements[symbol]
         charge = determine(parsed_charge, z; default=0)
         mass_number = determine(parsed_mass_numb, mass_numb; default=element.mass_number)
-        return ChargedParticleImpl(symbol, charge, mass_number)
+        return Particle(symbol, charge, mass_number)
     end
     throw(ArgumentError("Invalid particle string format: $str"))
 end
@@ -112,7 +120,7 @@ Fe-54³⁺
 function Particle(p::AbstractParticle; mass_numb=nothing, z=nothing)
     mass_number = something(mass_numb, p.mass_number)
     charge_number = something(z, p.charge_number)
-    ChargedParticleImpl(p.symbol, charge_number, mass_number)
+    Particle(p.symbol, charge_number, mass_number)
 end
 
 """
@@ -143,11 +151,11 @@ See also: [`Particle(::AbstractString)`](@ref)
 function Particle(atomic_number::Int; mass_numb=nothing, z=0)
     element = elements[atomic_number]
     mass_number = something(mass_numb, element.mass_number)
-    ChargedParticleImpl(element.symbol, z, mass_number)
+    Particle(element.symbol, z, mass_number)
 end
 
 # Convenience constructors for common particles
 """Create an electron"""
-electron() = ChargedParticleImpl(:e, -1, 0)
+electron() = Particle(:e, -1, 0)
 """Create a proton"""
-proton() = ChargedParticleImpl(:p, 1, 1)
+proton() = Particle(:p, 1, 1)

@@ -7,13 +7,13 @@ ChargedParticles.jl provides a flexible type system for representing various typ
 ```@raw html
 <pre>
 AbstractParticle
-└── ChargedParticleImpl
+└── Particle
 </pre>
 ```
 
 The package uses a simple two-level type hierarchy:
 - `AbstractParticle`: Base abstract type for all particles
-- `ChargedParticleImpl`: Concrete implementation storing particle properties
+- `Particle`: Concrete implementation storing particle properties
 
 ## Particle Properties
 

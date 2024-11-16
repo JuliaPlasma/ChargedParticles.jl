@@ -15,7 +15,7 @@ include("./utils.jl")
 include("./display.jl")
 include("./_special_particles.jl")
 
-export AbstractParticle, Particle, ChargedParticleImpl
+export AbstractParticle, Particle
 export mass, charge, charge_number, atomic_number, mass_number, element, mass_energy
 export is_ion, is_chemical_element, is_default_isotope
 export electron, proton
