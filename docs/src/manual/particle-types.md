@@ -8,16 +8,18 @@ ChargedParticles.jl provides a flexible type system for representing various typ
 <pre>
 AbstractParticle
 └── Particle
+└── CustomParticle
 </pre>
 ```
 
-The package uses a simple two-level type hierarchy:
+The package uses a simple three-level type hierarchy:
 - `AbstractParticle`: Base abstract type for all particles
-- `Particle`: Concrete implementation storing particle properties
+- `Particle`: Physically meaningful particle type (where symbol encodes the actual type of the particle)
+- `CustomParticle`: Custom particle type for user-defined particles (where symbol is just a label)
 
 ## Particle Properties
 
-Each particle has three fundamental properties:
+Each particle (`Particle`) has three fundamental properties:
 
 1. **Symbol** (`symbol::Symbol`): Chemical symbol or particle identifier
    - Regular elements: `:Fe`, `:He`, etc.
