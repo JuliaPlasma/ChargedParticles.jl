@@ -30,6 +30,10 @@ using Mendeleev: elements
         include("types.jl")
     end
 
+    @testset "Custom Particles" begin
+        include("custom_particles.jl")
+    end
+
     @testset "Properties" begin
         include("properties.jl")
     end
