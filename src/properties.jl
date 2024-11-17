@@ -28,6 +28,8 @@ function mass(p::AbstractParticle)
     end
 end
 
+charge_number(p::AbstractParticle) = p.charge_number
+
 """Return the electric charge of the particle in elementary charge units"""
 charge(p::AbstractParticle) = p.charge_number * Unitful.q
 
