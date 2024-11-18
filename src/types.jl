@@ -2,16 +2,42 @@
     AbstractParticle
 
 Abstract type representing any particle in plasma physics.
-
-See also: [`Particle`](@ref)
 """
 abstract type AbstractParticle end
+
+"""
+    AbstractChargeParticle <: AbstractParticle
+
+Abstract type representing any particle that could carry an electric charge.
+"""
+abstract type AbstractChargeParticle <: AbstractParticle end
+
+"""
+    AbstractFermion <: AbstractParticle
+
+Abstract type representing fermions (particles with half-integer spin).
+"""
+abstract type AbstractFermion <: AbstractParticle end
+
+"""
+    AbstractLepton <: AbstractFermion
+
+Abstract type representing leptons (electron, muon, tau and their neutrinos).
+"""
+abstract type AbstractLepton <: AbstractFermion end
+
+"""
+    AbstractQuark <: AbstractFermion
+
+Abstract type representing quarks (up, down, charm, strange, top, bottom).
+"""
+abstract type AbstractQuark <: AbstractFermion end
 
 # Type for particle-like inputs
 const ParticleLike = Union{AbstractParticle,Symbol,AbstractString}
 
 """
-    Particle <: AbstractParticle
+    Particle <: AbstractChargeParticle
 
 Implementation type for charged particles.
 
@@ -31,7 +57,7 @@ Particle(:Fe, 2)  # Creates Fe²⁺ with default mass number
 Fe²⁺
 ```
 """
-struct Particle <: AbstractParticle
+struct Particle <: AbstractChargeParticle
     symbol::Symbol
     charge_number::Int
     mass_number::Int
@@ -161,8 +187,5 @@ function Particle(atomic_number::Int; mass_numb=nothing, z=0)
     Particle(element.symbol, z, mass_number)
 end
 
-# Convenience constructors for common particles
-"""Create an electron"""
-electron() = Particle(:e, -1, 0)
 """Create a proton"""
 proton() = Particle(:p, 1, 1)

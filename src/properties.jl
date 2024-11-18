@@ -1,4 +1,4 @@
-const calculated_properties = (:charge, :atomic_number, :element, :mass_energy, :mass)
+const calculated_properties = (:charge_number, :charge, :atomic_number, :element, :mass_energy, :mass, :symbol)
 const properties_fn_map = Dict()
 const synonym_properties = Dict(
     :A => :mass_number,
@@ -68,10 +68,10 @@ println(mass_number(e))  # 0
 mass_number(p) = p.mass_number
 mass_number(::Nothing) = nothing
 
-function element(p::AbstractParticle)
+element(::AbstractParticle) = nothing
+
+function element(p::Particle)
     @match p.symbol begin
-        x, if x in ELEMENTARY_PARTICLES
-        end => return nothing
         :p => return elements[:H]
         _ => return elements[p.symbol]
     end
@@ -79,10 +79,12 @@ end
 
 mass_energy(p::AbstractParticle) = _format_energy(uconvert(u"eV", p.mass * Unitful.c^2))
 
-function Base.getproperty(p::Particle, s::Symbol)
+function Base.getproperty(p::AbstractParticle, s::Symbol)
+    s in fieldnames(typeof(p)) && return getfield(p, s)
     s in calculated_properties && return eval(get(properties_fn_map, s, s))(p)
     s in keys(synonym_properties) && return getproperty(p, synonym_properties[s])
-    return getfield(p, s)
 end
 
-Base.propertynames(p::Particle) = (sort ∘ collect ∘ union)(keys(synonym_properties), calculated_properties, fieldnames(Particle))
+function Base.propertynames(::T) where {T<:AbstractParticle}
+    (sort ∘ collect ∘ union)(keys(synonym_properties), calculated_properties, fieldnames(T))
+end
