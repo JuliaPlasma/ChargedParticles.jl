@@ -5,16 +5,27 @@ ChargedParticles.jl provides a flexible type system for representing various typ
 ## Type Hierarchy
 
 ```@raw html
+
+The package uses a exhaustive type hierarchy:
+
 <pre>
 AbstractParticle
-└── Particle
+├── AbstractChargeParticle
+│   ├── Particle
+├── AbstractFermion
+│   ├── AbstractLepton
+│   │   ├── Electron
+│   │   └── Muon
+│   └── AbstractQuark
+│   └── Neutron
+│   └── ...
 └── CustomParticle
 </pre>
 ```
 
-The package uses a simple three-level type hierarchy:
 - `AbstractParticle`: Base abstract type for all particles
-- `Particle`: Physically meaningful particle type (where symbol encodes the actual type of the particle)
+- `AbstractChargeParticle`: Particles that could carry an electric charge.
+- `Particle`: Physically meaningful particle type (for ions where symbol encodes the actual type of the particle)
 - `CustomParticle`: Custom particle type for user-defined particles (where symbol is just a label)
 
 ## Particle Properties
