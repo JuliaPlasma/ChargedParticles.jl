@@ -3,11 +3,8 @@ const antileptons = ("e+", "mu+", "tau+", "anti_nu_e", "anti_nu_mu", "anti_nu_ta
 const baryons = ("p+", "n")
 const antibaryons = ("p-", "antineutron")
 
-const mass_dicts = Dict(
-    :p => mp,
-)
-
 struct Electron <: AbstractLepton end
+struct Positron <: AbstractLepton end
 struct Muon <: AbstractLepton end
 struct Neutron <: AbstractFermion end
 
@@ -15,10 +12,14 @@ struct Neutron <: AbstractFermion end
 atomic_number(::AbstractFermion) = 0
 mass_number(::AbstractFermion) = 0
 
-## Electron
+## Electron and Positron
 charge_number(::Electron) = -1
 mass(::Electron) = me
 symbol(::Electron) = :e
+
+charge_number(::Positron) = 1
+mass(::Positron) = me
+symbol(::Positron) = :e
 
 ## Muon
 charge_number(::Muon) = -1
