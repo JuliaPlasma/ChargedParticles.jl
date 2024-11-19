@@ -22,10 +22,8 @@ end
 # Basic properties
 """Return the mass of the particle"""
 function mass(p::AbstractParticle)
-    get(mass_dicts, p.symbol) do
-        base_mass = mass(p.element, p.mass_number)
-        return base_mass - p.charge_number * Unitful.me
-    end
+    base_mass = mass(p.element, p.mass_number)
+    return base_mass - p.charge_number * Unitful.me
 end
 
 charge_number(p::AbstractParticle) = p.charge_number
