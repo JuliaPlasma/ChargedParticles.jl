@@ -12,8 +12,8 @@ Each entry maps a string alias to a tuple of (symbol, charge, mass_number)
 PARTICLE_ALIASES = Dict(
     "e+" => ("e", 1, 0),
     "positron" => ("e", 1, 0),
-    "neutron" => ("n", 0, 1),
-    "n" => ("n", 0, 1),
+    "neutron" => :Neutron,
+    "n" => :Neutron,
     "alpha" => ("He", 2, 4),
     "deuteron" => ("H", 1, 2),
     "D+" => ("H", 1, 2),
@@ -27,6 +27,6 @@ PARTICLE_ALIASES = Dict(
     "mu+" => ("μ", 1, 0),
 )
 
-ELECTRON_ALIASES_DICT = Dict(str => ("e", -1, 0) for str in ELECTRON_ALIASES)
+ELECTRON_ALIASES_DICT = Dict(str => :Electron for str in ELECTRON_ALIASES)
 PROTON_ALIASES_DICT = Dict(str => ("H", 1, 1) for str in PROTON_ALIASES)
 PARTICLE_ALIASES = merge(PARTICLE_ALIASES, ELECTRON_ALIASES_DICT, PROTON_ALIASES_DICT)
