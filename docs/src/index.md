@@ -21,7 +21,7 @@ ChargedParticles.jl provides a flexible type system for working with various par
 
 ```julia
 using Pkg
-Pkg.add(url="https://github.com/Beforerr/ChargedParticles.jl")
+Pkg.add("ChargedParticles")
 ```
 
 ## Quick Example
@@ -30,9 +30,9 @@ Pkg.add(url="https://github.com/Beforerr/ChargedParticles.jl")
 using ChargedParticles
 
 # Create common particles
-e = electron()       # electron
-p = proton()         # proton
-α = Particle("alpha") # alpha particle
+e = electron()
+p = proton()
+α = Particle("alpha")
 
 # Create ions and isotopes
 fe = Particle("Fe-56 3+")     # Iron(III) ion

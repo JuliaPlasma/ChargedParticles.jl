@@ -16,7 +16,7 @@ A Julia package for working with charged particles in plasma physics, inspired b
 
 ```julia
 using Pkg
-Pkg.add(url="https://github.com/Beforerr/ChargedParticles.jl")
+Pkg.add("ChargedParticles")
 ```
 
 ## Dependencies
