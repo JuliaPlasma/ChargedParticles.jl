@@ -14,7 +14,9 @@ julia> is_ion(electron())
 false
 ```
 """
-is_ion(p::AbstractParticle) = !(p.symbol in ELEMENTARY_PARTICLES) && p.charge_number != 0
+is_ion(::AbstractParticle) = false
+
+is_ion(p::Particle) = p.charge_number != 0
 
 """
     is_chemical_element(p::AbstractParticle)

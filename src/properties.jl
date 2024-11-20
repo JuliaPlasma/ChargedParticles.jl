@@ -1,4 +1,4 @@
-const calculated_properties = (:charge, :atomic_number, :element, :mass_energy, :mass)
+const calculated_properties = (:charge_number, :charge, :atomic_number, :element, :mass_energy, :mass, :symbol)
 const properties_fn_map = Dict()
 const synonym_properties = Dict(
     :A => :mass_number,
@@ -22,10 +22,8 @@ end
 # Basic properties
 """Return the mass of the particle"""
 function mass(p::AbstractParticle)
-    get(mass_dicts, p.symbol) do
-        base_mass = mass(p.element, p.mass_number)
-        return base_mass - p.charge_number * Unitful.me
-    end
+    base_mass = mass(p.element, p.mass_number)
+    return base_mass - p.charge_number * Unitful.me
 end
 
 charge_number(p::AbstractParticle) = p.charge_number
@@ -68,10 +66,10 @@ println(mass_number(e))  # 0
 mass_number(p) = p.mass_number
 mass_number(::Nothing) = nothing
 
-function element(p::AbstractParticle)
+element(::AbstractParticle) = nothing
+
+function element(p::Particle)
     @match p.symbol begin
-        x, if x in ELEMENTARY_PARTICLES
-        end => return nothing
         :p => return elements[:H]
         _ => return elements[p.symbol]
     end
@@ -79,10 +77,12 @@ end
 
 mass_energy(p::AbstractParticle) = _format_energy(uconvert(u"eV", p.mass * Unitful.c^2))
 
-function Base.getproperty(p::ChargedParticleImpl, s::Symbol)
+function Base.getproperty(p::AbstractParticle, s::Symbol)
+    s in fieldnames(typeof(p)) && return getfield(p, s)
     s in calculated_properties && return eval(get(properties_fn_map, s, s))(p)
     s in keys(synonym_properties) && return getproperty(p, synonym_properties[s])
-    return getfield(p, s)
 end
 
-Base.propertynames(p::ChargedParticleImpl) = (sort ∘ collect ∘ union)(keys(synonym_properties), calculated_properties, fieldnames(ChargedParticleImpl))
+function Base.propertynames(::T) where {T<:AbstractParticle}
+    (sort ∘ collect ∘ union)(keys(synonym_properties), calculated_properties, fieldnames(T))
+end

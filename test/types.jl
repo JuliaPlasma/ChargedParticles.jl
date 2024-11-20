@@ -1,5 +1,14 @@
 using Test, ChargedParticles, Unitful
+using ChargedParticles: is_electron, is_proton
 using Unitful: q
+
+@testset "Constructor" begin
+    # Test invalid mass numbers
+    @test_throws ArgumentError Particle(:He, 2, -1)
+
+    # Default mass number
+    @test mass_number(Particle(:He, 2)) == 4
+end
 
 @testset "String Constructor" begin
     # Test common aliases

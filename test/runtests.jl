@@ -1,6 +1,5 @@
 using Test
 using ChargedParticles
-using ChargedParticles: is_electron, is_proton
 using Unitful
 using Unitful: q, me
 
@@ -31,6 +30,10 @@ using Mendeleev: elements
         include("types.jl")
     end
 
+    @testset "Custom Particles" begin
+        include("custom_particles.jl")
+    end
+
     @testset "Properties" begin
         include("properties.jl")
     end
@@ -39,9 +42,6 @@ using Mendeleev: elements
         # Test invalid particle strings
         @test_throws KeyError Particle("invalid")
         @test_throws KeyError Particle("Xx")
-
-        # Test invalid mass numbers
-        @test_throws MethodError Particle(:He, 2, -1)
     end
 
     @testset "String Representation" begin
