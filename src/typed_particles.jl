@@ -31,6 +31,7 @@ struct SParticle{z,Z,A} <: AbstractParticle
 end
 
 SParticle(z, Z, A) = SParticle{z,Z,A}()
+SParticle(p::AbstractParticle) = SParticle(charge_number(p), atomic_number(p), mass_number(p))
 
 # Basic properties - use single type parameter where possible
 charge_number(::SParticle{z}) where {z} = z
