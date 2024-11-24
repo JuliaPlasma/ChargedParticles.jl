@@ -39,4 +39,4 @@ atomic_number(::SParticle{z,Z}) where {z,Z} = Z
 mass_number(::SParticle{z,Z,A}) where {z,Z,A} = A
 
 element(::SParticle{z,Z}) where {z,Z} = elements[Z]
-symbol(p::SParticle) = element(p).symbol
+symbol(p::SParticle) = symbol(element(p))
