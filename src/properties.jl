@@ -1,3 +1,5 @@
+using Mendeleev: isotopes_data, Isotopes, ChemElem
+
 const calculated_properties = (:charge_number, :charge, :atomic_number, :element, :mass_energy, :mass, :symbol)
 const properties_fn_map = Dict()
 const synonym_properties = Dict(
@@ -9,8 +11,8 @@ const synonym_properties = Dict(
 )
 
 """Retrieve the mass of an element isotope."""
-function mass(element, mass_number)
-    for iso in element.isotopes
+function mass(isotopes::Isotopes, mass_number)
+    for iso in isotopes
         if iso.mass_number == mass_number
             return iso.mass
         end
@@ -18,12 +20,15 @@ function mass(element, mass_number)
     throw(ArgumentError("No isotope found with mass number $mass_number for element $element"))
 end
 
+mass(element::ChemElem, mass_number) = mass(element.isotopes, mass_number)
+mass(atomic_number::Integer, mass_number) = mass(isotopes_data[atomic_number], mass_number)
+
 
 # Basic properties
 """Return the mass of the particle"""
 function mass(p::AbstractParticle)
-    base_mass = mass(p.element, p.mass_number)
-    return base_mass - p.charge_number * Unitful.me
+    base_mass = mass(atomic_number(p), mass_number(p))
+    return base_mass - charge_number(p) * Unitful.me
 end
 
 charge_number(p::AbstractParticle) = p.charge_number
