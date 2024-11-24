@@ -10,6 +10,8 @@ const synonym_properties = Dict(
     :ele => :element
 )
 
+symbol(e) = getfield(e, :symbol)
+
 """Retrieve the mass of an element isotope."""
 function mass(isotopes::Isotopes, mass_number)
     for iso in isotopes
@@ -21,7 +23,14 @@ function mass(isotopes::Isotopes, mass_number)
 end
 
 mass(element::ChemElem, mass_number) = mass(element.isotopes, mass_number)
-mass(atomic_number::Integer, mass_number) = mass(isotopes_data[atomic_number], mass_number)
+function mass(atomic_number::Integer, mass_number)
+    isotopes = isotopes_data[atomic_number]
+    if !ismissing(isotopes)
+        return mass(isotopes, mass_number)
+    else
+        return elements[atomic_number].atomic_mass
+    end
+end
 
 
 # Basic properties
@@ -74,9 +83,9 @@ mass_number(::Nothing) = nothing
 element(::AbstractParticle) = nothing
 
 function element(p::Particle)
-    @match p.symbol begin
+    @match symbol(p) begin
         :p => return elements[:H]
-        _ => return elements[p.symbol]
+        _ => return elements[symbol(p)]
     end
 end
 

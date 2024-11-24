@@ -87,7 +87,7 @@ Fe-54³⁺
 function Particle(p::AbstractParticle; mass_numb=nothing, z=nothing)
     mass_number = something(mass_numb, p.mass_number)
     charge_number = something(z, p.charge_number)
-    Particle(p.symbol, charge_number, mass_number)
+    Particle(symbol(p), charge_number, mass_number)
 end
 
 """
@@ -118,7 +118,7 @@ See also: [`Particle(::AbstractString)`](@ref)
 function Particle(atomic_number::Int; mass_numb=nothing, z=0)
     element = elements[atomic_number]
     mass_number = something(mass_numb, element.mass_number)
-    Particle(element.symbol, z, mass_number)
+    Particle(symbol(element), z, mass_number)
 end
 
 """Create a proton"""
