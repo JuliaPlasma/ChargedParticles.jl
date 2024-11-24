@@ -2,9 +2,10 @@ module ChargedParticles
 
 using Unitful
 using Mendeleev
-using Mendeleev: elements # for PeriodicTable compatibility
 using Match
 using Unitful: me, mp
+
+const elements = chem_elements
 
 include("./types.jl")
 include("./particle.jl")
