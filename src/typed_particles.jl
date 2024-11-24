@@ -1,9 +1,27 @@
 """
     SParticle{z, Z, A} <: AbstractParticle
 
-Type-parameterized particle implementation. 
+A type-parameterized implementation of a particle.
 
-`z` for charge, `Z` for atomic number, and `A` for mass number.
+# Type Parameters
+- `z::Integer`: The charge number (number of elementary charges)
+- `Z::Integer`: The atomic number (number of protons)
+- `A::Integer`: The mass number (total number of nucleons)
+
+# Constructors
+- `SParticle{z,Z,A}() / SParticle{z,Z,A}`: Construct a particle
+- `SParticle(p::AbstractParticle)`: Convert any AbstractParticle to an SParticle
+
+All parameters must be integers. The type ensures this at construction time.
+
+# Examples
+```julia
+# Create a proton (H+)
+proton = SParticle(1, 1, 1)
+
+# Create an alpha particle (He2+)
+alpha = SParticle{2,2,4}()
+```
 """
 struct SParticle{z,Z,A} <: AbstractParticle
     function SParticle{z,Z,A}() where {z,Z,A}
