@@ -1,6 +1,6 @@
 using Mendeleev: isotopes_data, Isotopes, ChemElem
 
-const calculated_properties = (:charge_number, :charge, :atomic_number, :element, :mass_energy, :mass, :symbol)
+const calculated_properties = (:charge_number, :charge, :mass_number, :atomic_number, :element, :mass_energy, :mass, :symbol)
 const properties_fn_map = Dict()
 const synonym_properties = Dict(
     :A => :mass_number,
@@ -43,7 +43,7 @@ end
 charge_number(p::AbstractParticle) = p.charge_number
 
 """Return the electric charge of the particle in elementary charge units"""
-charge(p::AbstractParticle) = p.charge_number * Unitful.q
+charge(p::AbstractParticle) = charge_number(p) * Unitful.q
 
 """
     atomic_number(p::AbstractParticle)

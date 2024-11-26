@@ -12,6 +12,7 @@ The package uses a exhaustive type hierarchy:
 AbstractParticle
 ├── AbstractChargeParticle
 │   ├── Particle
+│   └── SParticle
 ├── AbstractFermion
 │   ├── AbstractLepton
 │   │   ├── Electron
@@ -26,23 +27,45 @@ AbstractParticle
 - `AbstractParticle`: Base abstract type for all particles
 - `AbstractChargeParticle`: Particles that could carry an electric charge.
 - `Particle`: Physically meaningful particle type (for ions where symbol encodes the actual type of the particle)
+- `SParticle`: Type-parameterized particle type for memory-efficient representation
 - `CustomParticle`: Custom particle type for user-defined particles (where symbol is just a label)
+
+### SParticle: Type-Parameterized Implementation
+
+`SParticle` is a memory-efficient, type-parameterized implementation of a particle. Unlike `Particle` which stores particle properties as runtime values, `SParticle` encodes these properties in its type parameters:
+
+```julia
+# Type parameters encode charge number (z), atomic number (Z), and mass number (A)
+SParticle{z,Z,A}
+```
+
+#### Memory Efficiency
+
+`SParticle` is a zero-size type, meaning it requires no runtime memory allocation. This makes it particularly efficient for large-scale simulations where memory usage is critical:
+
+```@example
+# Compare memory usage
+using ChargedParticles # hide
+sizeof(SParticle{1,2,3}()), sizeof(Particle(:He, 1, 3))
+```
+
+However, it's less flexible than `Particle` when properties are dynamic or numerous or are determined at runtime.
 
 ## Particle Properties
 
-Each particle (`Particle`) has three fundamental properties:
+Each particle (`Particle`) has the following properties:
 
-1. **Symbol** (`symbol::Symbol`): Chemical symbol or particle identifier
+- **Symbol** (`symbol::Symbol`): Chemical symbol or particle identifier
    - Regular elements: `:Fe`, `:He`, etc.
    - Elementary particles: `:e` (electron), `:μ` (muon)
    - Special particles: `:n` (neutron)
 
-2. **Charge Number** (`charge_number::Int`): Number of elementary charges
+- **Charge Number** (`charge_number::Int`): Number of elementary charges
    - Positive for cations: `+1`, `+2`, etc.
    - Negative for anions: `-1`, `-2`, etc.
    - Zero for neutral atoms/particles
 
-3. **Mass Number** (`mass_number::Int`): Total number of nucleons
+- **Mass Number** (`mass_number::Int`): Total number of nucleons
    - For isotopes: sum of protons and neutrons
    - For elementary particles: `0`
    - For regular elements: most abundant isotope
@@ -60,7 +83,7 @@ Other properties derived from the above:
 
 - **Element** (`element::Element`): Element associated with the particle
 
-Accessing particle properties could be done using dot notation: `particle.{property_name}` or `{property_name}(particle)`.
+Accessing particle properties could be done using functions `{property_name}(particle)` or dot notation `particle.{property_name}`. Functions are preferred for performance.
 
 ```@example share
 using ChargedParticles # hide
