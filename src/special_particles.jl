@@ -7,6 +7,7 @@ struct Electron <: AbstractLepton end
 struct Positron <: AbstractLepton end
 struct Muon <: AbstractLepton end
 struct Neutron <: AbstractFermion end
+struct AntiMuon <: AbstractLepton end
 
 # Properties
 atomic_number(::AbstractFermion) = 0
@@ -25,6 +26,10 @@ symbol(::Positron) = :e
 charge_number(::Muon) = -1
 mass(::Muon) = 206.7682827me
 symbol(::Muon) = :μ
+
+charge_number(::AntiMuon) = 1
+mass(::AntiMuon) = 206.7682827me
+symbol(::AntiMuon) = :μ
 
 ## Neutron
 charge_number(::Neutron) = 0
