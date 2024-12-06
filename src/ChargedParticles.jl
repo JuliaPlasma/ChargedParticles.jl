@@ -19,7 +19,7 @@ include("./special_particles.jl")
 
 export AbstractParticle, Particle, SParticle, CustomParticle
 export Electron, Muon, Neutron
-export mass, charge, charge_number, atomic_number, mass_number, element, mass_energy
+export mass, charge, charge_number, atomic_number, mass_number, element, mass_energy, particle_symbol
 export is_ion, is_chemical_element, is_default_isotope
 export particle, electron, proton
 end

@@ -1,6 +1,18 @@
 using Test, ChargedParticles, Unitful
+using ChargedParticles: charge_symbol
 using Unitful: q
 using Mendeleev: elements
+
+@testset "Symbol Representation" begin
+    @test charge_symbol(0) == ""
+    @test charge_symbol(2) == "²⁺"
+    @test charge_symbol(1) == "⁺"
+    @test charge_symbol(-1) == "⁻"
+    @test charge_symbol(1, verbose=true) == "¹⁺"
+    @test charge_symbol(-1, verbose=true) == "¹⁻"
+
+    @test particle_symbol(particle("Fe-54 2+"); method=:aze) == "⁵⁴Fe²⁺"
+end
 
 p = Particle("Fe 2+")
 @test p.z == 2

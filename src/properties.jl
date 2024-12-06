@@ -1,6 +1,6 @@
 using Mendeleev: isotopes_data, Isotopes, ChemElem
 
-const calculated_properties = (:charge_number, :charge, :mass_number, :atomic_number, :element, :mass_energy, :mass, :symbol)
+const calculated_properties = (:charge_number, :charge, :mass_number, :atomic_number, :element, :mass_energy, :mass, :symbol, :particle_symbol)
 const properties_fn_map = Dict()
 const synonym_properties = Dict(
     :A => :mass_number,
@@ -44,6 +44,15 @@ charge_number(p::AbstractParticle) = p.charge_number
 
 """Return the electric charge of the particle in elementary charge units"""
 charge(p::AbstractParticle) = charge_number(p) * Unitful.q
+
+charge_symbol(z::Integer; verbose=false) = @match (z, verbose) begin
+    (0, _) => ""
+    (1, false) => "⁺"
+    (-1, false) => "⁻"
+    _ => Unitful.superscript(abs(z)) * (z > 0 ? "⁺" : "⁻")
+end
+
+charge_symbol(p::AbstractParticle) = (charge_symbol ∘ charge_number)(p)
 
 """
     atomic_number(p::AbstractParticle)
@@ -90,6 +99,23 @@ function element(p::Particle)
 end
 
 mass_energy(p::AbstractParticle) = _format_energy(uconvert(u"eV", p.mass * Unitful.c^2))
+
+# https://en.wikipedia.org/wiki/Isotope#Notation
+function notation(p::AbstractParticle; method=:hyphen)
+    sym_str = String(symbol(p))
+    if !is_chemical_element(p) || is_default_isotope(p)
+        return sym_str
+    else
+        @match method begin
+            :hyphen => sym_str * "-$(mass_number(p))"
+            :aze => Unitful.superscript(mass_number(p)) * sym_str
+        end
+    end
+end
+
+function particle_symbol(p::AbstractParticle; method=:hyphen)
+    return notation(p; method) * charge_symbol(p)
+end
 
 function Base.getproperty(p::AbstractParticle, s::Symbol)
     s in fieldnames(typeof(p)) && return getfield(p, s)
