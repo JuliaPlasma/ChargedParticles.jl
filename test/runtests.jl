@@ -50,6 +50,8 @@ using Mendeleev: elements
         @test string(Particle("He2+")) == "He²⁺"
         @test string(Particle("Fe-56")) == "Fe"
         @test string(Particle("Fe-54")) == "Fe-54"
+
+        @test string(particle("Fe-54 2+"; typed=true)) == "SParticle{2, 26, 54} with symbol: Fe-54²⁺"
     end
 
     @testset "Isotope Mass" begin

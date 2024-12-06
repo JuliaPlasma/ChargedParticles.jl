@@ -12,10 +12,10 @@ include("./particle.jl")
 include("./properties.jl")
 include("./aliases.jl")
 include("./utils.jl")
-include("./display.jl")
 include("./typed_particles.jl")
 include("./custom_particles.jl")
 include("./special_particles.jl")
+include("./display.jl")
 
 export AbstractParticle, Particle, SParticle, CustomParticle
 export Electron, Muon, Neutron
