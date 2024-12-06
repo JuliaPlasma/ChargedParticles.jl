@@ -61,6 +61,10 @@ end
     @test Particle("Fe"; mass_numb=54).mass_number == 54
     @test Particle("Fe-54", mass_numb=54).mass_number == 54
     @test_throws ArgumentError Particle("Fe-54"; mass_numb=55)
+
+    sp = particle("Fe-54 2+"; typed=true)
+    @test typeof(sp) <: SParticle
+    @test sp isa SParticle{2,26,54}
 end
 
 @testset "Atomic Number Constructor" begin
