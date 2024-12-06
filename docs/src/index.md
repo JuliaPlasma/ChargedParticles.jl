@@ -1,7 +1,7 @@
 # ChargedParticles.jl
 
-[![Build Status](https://github.com/Beforerr/ChargedParticles.jl/actions/workflows/CI.yml/badge.svg?branch=main)](https://github.com/Beforerr/ChargedParticles.jl/actions/workflows/CI.yml?query=branch%3Amain)
-[![Documentation](https://img.shields.io/badge/docs-dev-blue.svg)](https://beforerr.github.io/ChargedParticles.jl/dev/) 
+[![Build Status](https://github.com/JuliaPlasma/ChargedParticles.jl/actions/workflows/CI.yml/badge.svg?branch=main)](https://github.com/JuliaPlasma/ChargedParticles.jl/actions/workflows/CI.yml?query=branch%3Amain)
+[![Documentation](https://img.shields.io/badge/docs-dev-blue.svg)](https://JuliaPlasma.github.io/ChargedParticles.jl/dev/) 
 
 
 A Julia package for representing charged particles inspired by [PlasmaPy](https://github.com/PlasmaPy/PlasmaPy)'s particles subpackage.
@@ -51,7 +51,7 @@ println("Deuteron mass: ", mass(d))
 
 - [PlasmaPy](https://github.com/PlasmaPy/PlasmaPy): A Python package for plasma physics.
 - [Mendeleev.jl](https://github.com/Eben60/Mendeleev.jl): A Julia package for accessing periodic table data.
-- [Corpuscles.jl](https://github.com/Beforerr/Corpuscles.jl): A Julia package for for particle physics.
+- [Corpuscles.jl](https://github.com/JuliaPhysics/Corpuscles.jl): A Julia package for for particle physics.
 
 ## Manual Outline
 

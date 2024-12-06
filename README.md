@@ -1,9 +1,9 @@
 # ChargedParticles.jl
 
-[![Build Status](https://github.com/Beforerr/ChargedParticles.jl/actions/workflows/CI.yml/badge.svg?branch=main)](https://github.com/Beforerr/ChargedParticles.jl/actions/workflows/CI.yml?query=branch%3Amain)
-[![Documentation](https://img.shields.io/badge/docs-dev-blue.svg)](https://beforerr.github.io/ChargedParticles.jl/dev/) 
+[![Build Status](https://github.com/JuliaPlasma/ChargedParticles.jl/actions/workflows/CI.yml/badge.svg?branch=main)](https://github.com/JuliaPlasma/ChargedParticles.jl/actions/workflows/CI.yml?query=branch%3Amain)
+[![Documentation](https://img.shields.io/badge/docs-dev-blue.svg)](https://JuliaPlasma.github.io/ChargedParticles.jl/dev/) 
 
-A Julia package for working with charged particles in plasma physics, inspired by [PlasmaPy](https://github.com/PlasmaPy/PlasmaPy)'s particles subpackage .
+A Julia package for representing charged particles inspired by [PlasmaPy](https://github.com/PlasmaPy/PlasmaPy)'s particles subpackage.
 
 ## Features
 
@@ -18,11 +18,6 @@ A Julia package for working with charged particles in plasma physics, inspired b
 using Pkg
 Pkg.add("ChargedParticles")
 ```
-
-## Dependencies
-
-- Unitful.jl: For handling physical units
-- [Mendeleev.jl](https://github.com/Eben60/Mendeleev.jl): For periodic table data
 
 ## Contributing
 

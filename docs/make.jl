@@ -20,5 +20,5 @@ makedocs(
 )
 
 deploydocs(
-    repo="github.com/Beforerr/ChargedParticles.jl",
+    repo="github.com/JuliaPlasma/ChargedParticles.jl",
 )
