@@ -101,7 +101,7 @@ end
 mass_energy(p::AbstractParticle) = _format_energy(uconvert(u"eV", p.mass * Unitful.c^2))
 
 # https://en.wikipedia.org/wiki/Isotope#Notation
-function notation(p::AbstractParticle; method=:hyphen)
+function isotope_notation(p::AbstractParticle; method=:hyphen)
     sym_str = String(symbol(p))
     if !is_chemical_element(p) || is_default_isotope(p)
         return sym_str
@@ -114,7 +114,7 @@ function notation(p::AbstractParticle; method=:hyphen)
 end
 
 function particle_symbol(p::AbstractParticle; method=:hyphen)
-    return notation(p; method) * charge_symbol(p)
+    return isotope_notation(p; method) * charge_symbol(p)
 end
 
 function Base.getproperty(p::AbstractParticle, s::Symbol)
