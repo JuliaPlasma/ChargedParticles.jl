@@ -2,16 +2,16 @@
 <html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><title>Construction · ChargedParticles.jl</title><meta name="title" content="Construction · ChargedParticles.jl"/><meta property="og:title" content="Construction · ChargedParticles.jl"/><meta property="twitter:title" content="Construction · ChargedParticles.jl"/><meta name="description" content="Documentation for ChargedParticles.jl."/><meta property="og:description" content="Documentation for ChargedParticles.jl."/><meta property="twitter:description" content="Documentation for ChargedParticles.jl."/><script data-outdated-warner src="../../assets/warner.js"></script><link href="https://cdnjs.cloudflare.com/ajax/libs/lato-font/3.0.0/css/lato-font.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/juliamono/0.050/juliamono.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/fontawesome.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/solid.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/brands.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.8/katex.min.css" rel="stylesheet" type="text/css"/><script>documenterBaseURL="../.."</script><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" data-main="../../assets/documenter.js"></script><script src="../../search_index.js"></script><script src="../../siteinfo.js"></script><script src="../../../versions.js"></script><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../assets/themes/catppuccin-mocha.css" data-theme-name="catppuccin-mocha"/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../assets/themes/catppuccin-macchiato.css" data-theme-name="catppuccin-macchiato"/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../assets/themes/catppuccin-frappe.css" data-theme-name="catppuccin-frappe"/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../assets/themes/catppuccin-latte.css" data-theme-name="catppuccin-latte"/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../assets/themes/documenter-dark.css" data-theme-name="documenter-dark" data-theme-primary-dark/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../assets/themes/documenter-light.css" data-theme-name="documenter-light" data-theme-primary/><script src="../../assets/themeswap.js"></script></head><body><div id="documenter"><nav class="docs-sidebar"><div class="docs-package-name"><span class="docs-autofit"><a href="../../">ChargedParticles.jl</a></span></div><button class="docs-search-query input is-rounded is-small is-clickable my-2 mx-auto py-1 px-2" id="documenter-search-query">Search docs (Ctrl + /)</button><ul class="docs-menu"><li><a class="tocitem" href="../../">Home</a></li><li><span class="tocitem">Manual</span><ul><li><a class="tocitem" href="../getting-started/">Getting Started</a></li><li><a class="tocitem" href="../particle-types/">Particle Types</a></li><li class="is-active"><a class="tocitem" href>Construction</a><ul class="internal"><li><a class="tocitem" href="#String-Format"><span>String Format</span></a></li><li><a class="tocitem" href="#Common-Particle-Aliases"><span>Common Particle Aliases</span></a></li><li><a class="tocitem" href="#Atomic-Number-Constructor"><span>Atomic Number Constructor</span></a></li><li><a class="tocitem" href="#Convenience-Constructors"><span>Convenience Constructors</span></a></li><li><a class="tocitem" href="#Error-Handling"><span>Error Handling</span></a></li></ul></li></ul></li><li><a class="tocitem" href="../../api/">API Reference</a></li></ul><div class="docs-version-selector field has-addons"><div class="control"><span class="docs-label button is-static is-size-7">Version</span></div><div class="docs-selector control is-expanded"><div class="select is-fullwidth is-size-7"><select id="documenter-version-selector"></select></div></div></div></nav><div class="docs-main"><header class="docs-navbar"><a class="docs-sidebar-button docs-navbar-link fa-solid fa-bars is-hidden-desktop" id="documenter-sidebar-button" href="#"></a><nav class="breadcrumb"><ul class="is-hidden-mobile"><li><a class="is-disabled">Manual</a></li><li class="is-active"><a href>Construction</a></li></ul><ul class="is-hidden-tablet"><li class="is-active"><a href>Construction</a></li></ul></nav><div class="docs-right"><a class="docs-navbar-link" href="https://github.com/JuliaPlasma/ChargedParticles.jl" title="View the repository on GitHub"><span class="docs-icon fa-brands"></span><span class="docs-label is-hidden-touch">GitHub</span></a><a class="docs-navbar-link" href="https://github.com/JuliaPlasma/ChargedParticles.jl/blob/main/docs/src/manual/construction.md" title="Edit source on GitHub"><span class="docs-icon fa-solid"></span></a><a class="docs-settings-button docs-navbar-link fa-solid fa-gear" id="documenter-settings-button" href="#" title="Settings"></a><a class="docs-article-toggle-button fa-solid fa-chevron-up" id="documenter-article-toggle-button" href="javascript:;" title="Collapse all docstrings"></a></div></header><article class="content" id="documenter-page"><h1 id="Particle-Construction"><a class="docs-heading-anchor" href="#Particle-Construction">Particle Construction</a><a id="Particle-Construction-1"></a><a class="docs-heading-anchor-permalink" href="#Particle-Construction" title="Permalink"></a></h1><p>ChargedParticles.jl provides multiple ways to construct particles, offering flexibility for different use cases.</p><h2 id="String-Format"><a class="docs-heading-anchor" href="#String-Format">String Format</a><a id="String-Format-1"></a><a class="docs-heading-anchor-permalink" href="#String-Format" title="Permalink"></a></h2><p>The most common way to create particles is using string format:</p><pre><code class="language-julia hljs">using ChargedParticles
 
 # Basic elements
-fe = Particle(&quot;Fe&quot;)     # Iron
-he = Particle(&quot;He&quot;)     # Helium
+fe = particle(&quot;Fe&quot;)     # Iron
+he = particle(&quot;He&quot;)     # Helium
 
 # Ions with charge
-fe3 = Particle(&quot;Fe3+&quot;)  # Iron(III)
-fe2 = Particle(&quot;Fe2-&quot;)  # Iron(-II)
+fe3 = particle(&quot;Fe3+&quot;)  # Iron(III)
+fe2 = particle(&quot;Fe2-&quot;)  # Iron(-II)
 
 # Isotopes
-fe56 = Particle(&quot;Fe-56&quot;)  # Iron-56
-u235 = Particle(&quot;U-235&quot;)  # Uranium-235
+fe56 = particle(&quot;Fe-56&quot;)  # Iron-56
+u235 = particle(&quot;U-235&quot;)  # Uranium-235
 
 println(&quot;Iron: z = $(atomic_number(fe))&quot;)
 println(&quot;Iron(III): charge = $(charge(fe3))&quot;)
@@ -20,14 +20,14 @@ Iron(III): charge = 4.806529901999999e-19 C
 Iron-56: A = 56</code></pre><h3 id="String-Format-Rules"><a class="docs-heading-anchor" href="#String-Format-Rules">String Format Rules</a><a id="String-Format-Rules-1"></a><a class="docs-heading-anchor-permalink" href="#String-Format-Rules" title="Permalink"></a></h3><ol><li><p><strong>Basic Elements</strong></p><ul><li>Just the symbol: <code>&quot;Fe&quot;</code>, <code>&quot;He&quot;</code>, <code>&quot;U&quot;</code></li><li>Case sensitive: <code>&quot;Fe&quot;</code> works, <code>&quot;FE&quot;</code> doesn&#39;t</li></ul></li><li><p><strong>Ions</strong></p><ul><li>Append charge: <code>&quot;Fe3+&quot;</code>, <code>&quot;Fe2-&quot;</code></li><li>Format: <code>SYMBOL</code> + <code>NUMBER</code> + <code>+/-</code></li><li>Examples: <code>&quot;Fe3+&quot;</code>, <code>&quot;Cl-&quot;</code>, <code>&quot;Ca2+&quot;</code></li></ul></li><li><p><strong>Isotopes</strong></p><ul><li>Format: <code>SYMBOL</code> + <code>-</code> + <code>MASS_NUMBER</code></li><li>Examples: <code>&quot;Fe-56&quot;</code>, <code>&quot;U-235&quot;</code>, <code>&quot;C-14&quot;</code></li></ul></li><li><p><strong>Combined Isotopes and Ions</strong></p><ul><li>Format: <code>SYMBOL</code> + <code>-</code> + <code>MASS_NUMBER</code> + <code>NUMBER</code> + <code>+/-</code></li><li>Examples: <code>&quot;Fe-56_3+&quot;</code>, <code>&quot;U-235_2+&quot;</code></li></ul></li></ol><h2 id="Common-Particle-Aliases"><a class="docs-heading-anchor" href="#Common-Particle-Aliases">Common Particle Aliases</a><a id="Common-Particle-Aliases-1"></a><a class="docs-heading-anchor-permalink" href="#Common-Particle-Aliases" title="Permalink"></a></h2><p>Many common particles have predefined aliases:</p><pre><code class="language-julia hljs">using ChargedParticles
 
 # Elementary particles
-e = Particle(&quot;electron&quot;)  # or &quot;e-&quot;
-p = Particle(&quot;proton&quot;)    # or &quot;p+&quot;
-n = Particle(&quot;neutron&quot;)   # or &quot;n&quot;
+e = particle(&quot;electron&quot;)  # or &quot;e-&quot;
+p = particle(&quot;proton&quot;)    # or &quot;p+&quot;
+n = particle(&quot;neutron&quot;)   # or &quot;n&quot;
 
 # Special particles
-α = Particle(&quot;alpha&quot;)     # He²⁺
-d = Particle(&quot;deuteron&quot;)  # D⁺
-t = Particle(&quot;triton&quot;)    # T⁺
+α = particle(&quot;alpha&quot;)     # He²⁺
+d = particle(&quot;deuteron&quot;)  # D⁺
+t = particle(&quot;triton&quot;)    # T⁺
 
 println(&quot;Electron charge: $(charge(e))&quot;)
 println(&quot;Alpha particle: z = $(atomic_number(α)), A = $(mass_number(α))&quot;)
@@ -36,12 +36,12 @@ Alpha particle: z = 2, A = 4
 Deuteron mass number: 2</code></pre><h2 id="Atomic-Number-Constructor"><a class="docs-heading-anchor" href="#Atomic-Number-Constructor">Atomic Number Constructor</a><a id="Atomic-Number-Constructor-1"></a><a class="docs-heading-anchor-permalink" href="#Atomic-Number-Constructor" title="Permalink"></a></h2><p>You can also create particles using their atomic numbers:</p><pre><code class="language-julia hljs">using ChargedParticles
 
 # Basic construction
-fe = Particle(26)        # Iron
-u = Particle(92)         # Uranium
+fe = particle(26)        # Iron
+u = particle(92)         # Uranium
 
 # With mass number and charge
-fe56_3plus = Particle(26, mass_numb=56, z=3)  # Fe-56³⁺
-u235_2plus = Particle(92, mass_numb=235, z=2)  # U-235²⁺
+fe56_3plus = particle(26, mass_numb=56, z=3)  # Fe-56³⁺
+u235_2plus = particle(92, mass_numb=235, z=2)  # U-235²⁺
 
 println(&quot;Iron: z = $(atomic_number(fe))&quot;)
 println(&quot;U-235²⁺: z = $(atomic_number(u235_2plus)), A = $(mass_number(u235_2plus))&quot;)</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">Iron: z = 26
@@ -57,14 +57,14 @@ Proton charge: 1.602176634e-19 C</code></pre><h2 id="Error-Handling"><a class="d
 
 # These will throw errors
 try
-    invalid = Particle(&quot;XX&quot;)  # Invalid element symbol
+    invalid = particle(&quot;XX&quot;)  # Invalid element symbol
 catch e
     println(&quot;Error: &quot;, e)
 end
 
 try
-    invalid = Particle(-1)    # Invalid atomic number
+    invalid = particle(-1)    # Invalid atomic number
 catch e
     println(&quot;Error: &quot;, e)
 end</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">Error: KeyError(:XX)
-Error: KeyError(-1)</code></pre></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../particle-types/">« Particle Types</a><a class="docs-footer-nextpage" href="../../api/">API Reference »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="auto">Automatic (OS)</option><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option><option value="catppuccin-latte">catppuccin-latte</option><option value="catppuccin-frappe">catppuccin-frappe</option><option value="catppuccin-macchiato">catppuccin-macchiato</option><option value="catppuccin-mocha">catppuccin-mocha</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 1.8.0 on <span class="colophon-date" title="Friday 6 December 2024 18:07">Friday 6 December 2024</span>. Using Julia version 1.11.2.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
+Error: KeyError(-1)</code></pre></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../particle-types/">« Particle Types</a><a class="docs-footer-nextpage" href="../../api/">API Reference »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="auto">Automatic (OS)</option><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option><option value="catppuccin-latte">catppuccin-latte</option><option value="catppuccin-frappe">catppuccin-frappe</option><option value="catppuccin-macchiato">catppuccin-macchiato</option><option value="catppuccin-mocha">catppuccin-mocha</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 1.8.0 on <span class="colophon-date" title="Wednesday 15 January 2025 06:13">Wednesday 15 January 2025</span>. Using Julia version 1.11.2.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>

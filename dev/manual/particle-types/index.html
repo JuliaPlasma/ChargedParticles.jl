@@ -18,7 +18,7 @@ AbstractParticle
 </pre><ul><li><code>AbstractParticle</code>: Base abstract type for all particles</li><li><code>AbstractChargeParticle</code>: Particles that could carry an electric charge.</li><li><code>Particle</code>: Physically meaningful particle type (for ions where symbol encodes the actual type of the particle)</li><li><code>SParticle</code>: Type-parameterized particle type for memory-efficient representation</li><li><code>CustomParticle</code>: Custom particle type for user-defined particles (where symbol is just a label)</li></ul><h3 id="SParticle:-Type-Parameterized-Implementation"><a class="docs-heading-anchor" href="#SParticle:-Type-Parameterized-Implementation">SParticle: Type-Parameterized Implementation</a><a id="SParticle:-Type-Parameterized-Implementation-1"></a><a class="docs-heading-anchor-permalink" href="#SParticle:-Type-Parameterized-Implementation" title="Permalink"></a></h3><p><code>SParticle</code> is a memory-efficient, type-parameterized implementation of a particle. Unlike <code>Particle</code> which stores particle properties as runtime values, <code>SParticle</code> encodes these properties in its type parameters:</p><pre><code class="language-julia hljs"># Type parameters encode charge number (z), atomic number (Z), and mass number (A)
 SParticle{z,Z,A}</code></pre><h4 id="Memory-Efficiency"><a class="docs-heading-anchor" href="#Memory-Efficiency">Memory Efficiency</a><a id="Memory-Efficiency-1"></a><a class="docs-heading-anchor-permalink" href="#Memory-Efficiency" title="Permalink"></a></h4><p><code>SParticle</code> is a zero-size type, meaning it requires no runtime memory allocation. This makes it particularly efficient for large-scale simulations where memory usage is critical:</p><pre><code class="language-julia hljs"># Compare memory usage
 sizeof(SParticle{1,2,3}()), sizeof(Particle(:He, 1, 3))</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">(0, 24)</code></pre><p>However, it&#39;s less flexible than <code>Particle</code> when properties are dynamic or numerous or are determined at runtime.</p><h2 id="Particle-Properties"><a class="docs-heading-anchor" href="#Particle-Properties">Particle Properties</a><a id="Particle-Properties-1"></a><a class="docs-heading-anchor-permalink" href="#Particle-Properties" title="Permalink"></a></h2><p>Each particle (<code>Particle</code>) has the following properties:</p><ul><li><p><strong>Symbol</strong> (<code>symbol::Symbol</code>): Chemical symbol or particle identifier</p><ul><li>Regular elements: <code>:Fe</code>, <code>:He</code>, etc.</li><li>Elementary particles: <code>:e</code> (electron), <code>:μ</code> (muon)</li><li>Special particles: <code>:n</code> (neutron)</li></ul></li><li><p><strong>Charge Number</strong> (<code>charge_number::Int</code>): Number of elementary charges</p><ul><li>Positive for cations: <code>+1</code>, <code>+2</code>, etc.</li><li>Negative for anions: <code>-1</code>, <code>-2</code>, etc.</li><li>Zero for neutral atoms/particles</li></ul></li><li><p><strong>Mass Number</strong> (<code>mass_number::Int</code>): Total number of nucleons</p><ul><li>For isotopes: sum of protons and neutrons</li><li>For elementary particles: <code>0</code></li><li>For regular elements: most abundant isotope</li></ul></li></ul><p>Other properties derived from the above:</p><ul><li><p><strong>Mass</strong> (<code>mass::Unitful.Mass</code>): Particle mass</p><ul><li>Calculated from the particle&#39;s symbol and mass number</li><li>Elementary particles: predefined constants (me, mμ, etc.)</li><li>Atoms and ions: looked up from isotope data</li></ul></li><li><p><strong>Charge (q)</strong> (<code>charge\q::Unitful.Charge</code>): Particle charge</p></li><li><p><strong>Atomic Number (Z)</strong> (<code>atomic_number\Z::Int</code>): Number of protons in the particle</p></li><li><p><strong>Element</strong> (<code>element::Element</code>): Element associated with the particle</p></li></ul><p>Accessing particle properties could be done using functions <code>{property_name}(particle)</code> or dot notation <code>particle.{property_name}</code>. Functions are preferred for performance.</p><pre><code class="language-julia hljs">e = electron()
-e.mass, mass(e)</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">(9.1093837015e-31 kg, 9.1093837015e-31 kg)</code></pre><p>More properties (fields) about the element could be found in the <a href="https://eben60.github.io/Mendeleev.jl/elements_data_fields/">Mendeleev.jl</a>. These fields could be accessed by <code>particle.element.{field_name}</code> or <code>element(particle).{field_name}</code>.</p><pre><code class="language-julia hljs">p = Particle(&quot;Fe&quot;)
+e.mass, mass(e)</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">(9.1093837015e-31 kg, 9.1093837015e-31 kg)</code></pre><p>More properties (fields) about the element could be found in the <a href="https://eben60.github.io/Mendeleev.jl/elements_data_fields/">Mendeleev.jl</a>. These fields could be accessed by <code>particle.element.{field_name}</code> or <code>element(particle).{field_name}</code>.</p><pre><code class="language-julia hljs">p = particle(&quot;Fe&quot;)
 @show propertynames(p.element);</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">104-element Vector{Symbol}:
  :abundance_crust
  :abundance_sea
@@ -68,43 +68,37 @@ e = electron()
 println(&quot;Electron: charge = $(charge(e)), mass = $(mass(e))&quot;)
 
 # Muon
-μ = Particle(&quot;mu-&quot;)
+μ = particle(&quot;mu-&quot;)
 println(&quot;Muon: charge = $(charge(μ)), mass = $(mass(μ))&quot;)</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">Electron: charge = -1.602176634e-19 C, mass = 9.1093837015e-31 kg
-Muon: charge = -1.602176634e-19 C, mass = 1.8835316244145244e-28 kg</code></pre><h3 id="Atoms-and-Ions"><a class="docs-heading-anchor" href="#Atoms-and-Ions">Atoms and Ions</a><a id="Atoms-and-Ions-1"></a><a class="docs-heading-anchor-permalink" href="#Atoms-and-Ions" title="Permalink"></a></h3><pre><code class="language-julia hljs">using ChargedParticles
-
-# Neutral atom
-fe = Particle(&quot;Fe&quot;)
+Muon: charge = -1.602176634e-19 C, mass = 1.8835316244145244e-28 kg</code></pre><h3 id="Atoms-and-Ions"><a class="docs-heading-anchor" href="#Atoms-and-Ions">Atoms and Ions</a><a id="Atoms-and-Ions-1"></a><a class="docs-heading-anchor-permalink" href="#Atoms-and-Ions" title="Permalink"></a></h3><pre><code class="language-julia hljs"># Neutral atom
+fe = particle(&quot;Fe&quot;)
 println(&quot;Iron: Z = $(atomic_number(fe)), A = $(mass_number(fe))&quot;)
 
 # Positive ion
-fe3 = Particle(&quot;Fe3+&quot;)
+fe3 = particle(&quot;Fe3+&quot;)
 println(&quot;Iron(III): charge = $(charge(fe3))&quot;)
 
 # Negative ion
-h_minus = Particle(&quot;H-&quot;)
+h_minus = particle(&quot;H-&quot;)
 println(&quot;Hydride: charge = $(charge(h_minus))&quot;)</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">Iron: Z = 26, A = 56
 Iron(III): charge = 4.806529901999999e-19 C
-Hydride: charge = -1.602176634e-19 C</code></pre><h3 id="Isotopes"><a class="docs-heading-anchor" href="#Isotopes">Isotopes</a><a id="Isotopes-1"></a><a class="docs-heading-anchor-permalink" href="#Isotopes" title="Permalink"></a></h3><pre><code class="language-julia hljs">using ChargedParticles
-
-# Neutral isotope
-fe56 = Particle(&quot;Fe-56&quot;)
+Hydride: charge = -1.602176634e-19 C</code></pre><h3 id="Isotopes"><a class="docs-heading-anchor" href="#Isotopes">Isotopes</a><a id="Isotopes-1"></a><a class="docs-heading-anchor-permalink" href="#Isotopes" title="Permalink"></a></h3><pre><code class="language-julia hljs"># Neutral isotope
+fe56 = particle(&quot;Fe-56&quot;)
 println(&quot;Fe-56: A = $(mass_number(fe56))&quot;)
 
 # Charged isotope
-he4_2plus = Particle(&quot;He2+&quot;, mass_numb=4)
+he4_2plus = particle(&quot;He2+&quot;, mass_numb=4)
 println(&quot;He-4(2+): Z = $(atomic_number(he4_2plus)), A = $(mass_number(he4_2plus))&quot;)</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">Fe-56: A = 56
-He-4(2+): Z = 2, A = 4</code></pre><h3 id="Special-Particles"><a class="docs-heading-anchor" href="#Special-Particles">Special Particles</a><a id="Special-Particles-1"></a><a class="docs-heading-anchor-permalink" href="#Special-Particles" title="Permalink"></a></h3><pre><code class="language-julia hljs">using ChargedParticles
-
-# Alpha particle
-α = Particle(&quot;alpha&quot;)
+He-4(2+): Z = 2, A = 4</code></pre><h3 id="Special-Particles"><a class="docs-heading-anchor" href="#Special-Particles">Special Particles</a><a id="Special-Particles-1"></a><a class="docs-heading-anchor-permalink" href="#Special-Particles" title="Permalink"></a></h3><pre><code class="language-julia hljs"># Alpha particle
+α = particle(&quot;alpha&quot;)
 println(&quot;Alpha: Z = $(atomic_number(α)), A = $(mass_number(α))&quot;)
 
 # Deuteron
-d = Particle(&quot;D+&quot;)
+d = particle(&quot;D+&quot;)
 println(&quot;Deuteron: A = $(mass_number(d))&quot;)
 
 # Triton
-t = Particle(&quot;T+&quot;)
+t = particle(&quot;T+&quot;)
 println(&quot;Triton: A = $(mass_number(t))&quot;)</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">Alpha: Z = 2, A = 4
 Deuteron: A = 2
-Triton: A = 3</code></pre></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../getting-started/">« Getting Started</a><a class="docs-footer-nextpage" href="../construction/">Construction »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="auto">Automatic (OS)</option><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option><option value="catppuccin-latte">catppuccin-latte</option><option value="catppuccin-frappe">catppuccin-frappe</option><option value="catppuccin-macchiato">catppuccin-macchiato</option><option value="catppuccin-mocha">catppuccin-mocha</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 1.8.0 on <span class="colophon-date" title="Friday 6 December 2024 18:07">Friday 6 December 2024</span>. Using Julia version 1.11.2.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
+Triton: A = 3</code></pre></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../getting-started/">« Getting Started</a><a class="docs-footer-nextpage" href="../construction/">Construction »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="auto">Automatic (OS)</option><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option><option value="catppuccin-latte">catppuccin-latte</option><option value="catppuccin-frappe">catppuccin-frappe</option><option value="catppuccin-macchiato">catppuccin-macchiato</option><option value="catppuccin-mocha">catppuccin-mocha</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 1.8.0 on <span class="colophon-date" title="Wednesday 15 January 2025 06:13">Wednesday 15 January 2025</span>. Using Julia version 1.11.2.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
