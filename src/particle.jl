@@ -73,6 +73,11 @@ H⁺
 """
 particle(sym::Symbol; kwargs...) = particle(string(sym); kwargs...)
 
+particle(s::Symbol, charge_number::Int, mass_number::Int; typed::Bool=false) =
+    typed ? SParticle(charge_number, elements[s].number, mass_number) :
+    Particle(s, charge_number, mass_number)
+
+
 """
     particle(atomic_number::Int; mass_numb=nothing, z=0, typed=false)
 
