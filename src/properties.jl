@@ -61,7 +61,7 @@ Return the atomic number (number of protons) of the particle.
 
 # Examples
 ```julia
-fe = Particle("Fe")
+fe = particle("Fe")
 println(atomic_number(fe))  # 26
 
 e = electron()
@@ -72,6 +72,8 @@ function atomic_number(p::AbstractParticle)
     return isnothing(e) ? 0 : e.atomic_number
 end
 
+atomic_number(s::Symbol) = elements[s].atomic_number
+
 """
     mass_number(p::AbstractParticle)
 
@@ -79,7 +81,7 @@ Return the mass number (total number of nucleons) of the particle.
 
 # Examples
 ```julia
-fe56 = Particle("Fe-56")
+fe56 = particle("Fe-56")
 println(mass_number(fe56))  # 56
 
 e = electron()

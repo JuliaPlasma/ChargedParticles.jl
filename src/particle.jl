@@ -38,7 +38,7 @@ function particle(str::AbstractString; mass_numb=nothing, z=nothing, typed=false
         if result isa Tuple
             symbol, charge, mass_number = result
             symbol = Symbol(symbol)
-            return typed ? SParticle(charge, elements[symbol].number, mass_number) : Particle(symbol, charge, mass_number)
+            return typed ? SParticle(charge, atomic_number(symbol), mass_number) : Particle(symbol, charge, mass_number)
         else
             return eval(result)()
         end
@@ -74,7 +74,7 @@ H⁺
 particle(sym::Symbol; kwargs...) = particle(string(sym); kwargs...)
 
 particle(s::Symbol, charge_number::Int, mass_number::Int; typed::Bool=false) =
-    typed ? SParticle(charge_number, elements[s].number, mass_number) :
+    typed ? SParticle(charge_number, atomic_number(s), mass_number) :
     Particle(s, charge_number, mass_number)
 
 
