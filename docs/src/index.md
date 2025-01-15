@@ -32,12 +32,12 @@ using ChargedParticles
 # Create common particles
 e = electron()
 p = proton()
-α = Particle("alpha")
+α = particle("alpha")
 
 # Create ions and isotopes
-fe = Particle("Fe-56 3+")     # Iron(III) ion
-fe54 = Particle(:Fe, 3, 54)
-d = Particle("D+")         # Deuteron
+fe = particle("Fe-56 3+")     # Iron(III) ion
+fe54 = particle(:Fe, 3, 54)
+d = particle("D+")         # Deuteron
 
 # Access properties
 println("Electron mass: ", mass(e))

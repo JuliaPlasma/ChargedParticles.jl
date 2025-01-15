@@ -43,7 +43,7 @@ SParticle{z,Z,A}
 
 `SParticle` is a zero-size type, meaning it requires no runtime memory allocation. This makes it particularly efficient for large-scale simulations where memory usage is critical:
 
-```@example
+```@example share
 # Compare memory usage
 using ChargedParticles # hide
 sizeof(SParticle{1,2,3}()), sizeof(Particle(:He, 1, 3))
@@ -86,7 +86,6 @@ Other properties derived from the above:
 Accessing particle properties could be done using functions `{property_name}(particle)` or dot notation `particle.{property_name}`. Functions are preferred for performance.
 
 ```@example share
-using ChargedParticles # hide
 e = electron()
 e.mass, mass(e)
 ```
@@ -94,7 +93,7 @@ e.mass, mass(e)
 More properties (fields) about the element could be found in the [Mendeleev.jl](https://eben60.github.io/Mendeleev.jl/elements_data_fields/). These fields could be accessed by `particle.element.{field_name}` or `element(particle).{field_name}`.
 
 ```@example share
-p = Particle("Fe")
+p = particle("Fe")
 @show propertynames(p.element);
 ```
 
@@ -106,64 +105,56 @@ p.element
 
 ### Elementary Particles
 
-```@example
-using ChargedParticles # hide
-
+```@example share
 # Electron
 e = electron()
 println("Electron: charge = $(charge(e)), mass = $(mass(e))")
 
 # Muon
-μ = Particle("mu-")
+μ = particle("mu-")
 println("Muon: charge = $(charge(μ)), mass = $(mass(μ))")
 ```
 
 ### Atoms and Ions
 
-```@example
-using ChargedParticles
-
+```@example share
 # Neutral atom
-fe = Particle("Fe")
+fe = particle("Fe")
 println("Iron: Z = $(atomic_number(fe)), A = $(mass_number(fe))")
 
 # Positive ion
-fe3 = Particle("Fe3+")
+fe3 = particle("Fe3+")
 println("Iron(III): charge = $(charge(fe3))")
 
 # Negative ion
-h_minus = Particle("H-")
+h_minus = particle("H-")
 println("Hydride: charge = $(charge(h_minus))")
 ```
 
 ### Isotopes
 
-```@example
-using ChargedParticles
-
+```@example share
 # Neutral isotope
-fe56 = Particle("Fe-56")
+fe56 = particle("Fe-56")
 println("Fe-56: A = $(mass_number(fe56))")
 
 # Charged isotope
-he4_2plus = Particle("He2+", mass_numb=4)
+he4_2plus = particle("He2+", mass_numb=4)
 println("He-4(2+): Z = $(atomic_number(he4_2plus)), A = $(mass_number(he4_2plus))")
 ```
 
 ### Special Particles
 
-```@example
-using ChargedParticles
-
+```@example share
 # Alpha particle
-α = Particle("alpha")
+α = particle("alpha")
 println("Alpha: Z = $(atomic_number(α)), A = $(mass_number(α))")
 
 # Deuteron
-d = Particle("D+")
+d = particle("D+")
 println("Deuteron: A = $(mass_number(d))")
 
 # Triton
-t = Particle("T+")
+t = particle("T+")
 println("Triton: A = $(mass_number(t))")
 ```

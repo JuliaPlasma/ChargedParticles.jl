@@ -1,14 +1,10 @@
 # Getting Started
 
-```@setup
-using ChargedParticles
-```
-
 ## Basic Usage
 
 First, import the package:
 
-```@example
+```@example share
 using ChargedParticles
 ```
 
@@ -16,29 +12,26 @@ using ChargedParticles
 
 There are several ways to create particles:
 
-```@example
-using ChargedParticles
+```@example share
 # Using string format
-e = Particle("e-")
-p = Particle("H+")
-alpha = Particle("He2+")
+e = particle("e-")
+p = particle("H+")
+alpha = particle("He2+")
 
 # Using convenience constructors
 e = electron()
 p = proton()
 
 # Using atomic numbers
-iron = Particle(26)  # Fe
-helium = Particle(2, mass_numb=4, z=2)  # He⁴²⁺
+iron = particle(26)  # Fe
+helium = particle(2, mass_numb=4, z=2)  # He⁴²⁺
 ``` 
 
 ### Accessing Properties
 
 Each particle has several physical properties that can be accessed:
 
-```@example
-using ChargedParticles
-
+```@example share
 p = proton()
 
 # Get mass
@@ -62,12 +55,10 @@ println("Mass number: ", a)
 
 Creating and working with ions is straightforward:
 
-```@example
-using ChargedParticles
-
+```@example share
 # Create some ions
-fe3 = Particle("Fe3+")     # Iron(III)
-hydride = Particle("H-")   # Hydride ion
+fe3 = particle("Fe3+")     # Iron(III)
+hydride = particle("H-")   # Hydride ion
 
 # Check if particles are ions
 println("Is Fe3+ an ion? ", is_ion(fe3))
@@ -79,13 +70,11 @@ println("Is electron an ion? ", is_ion(electron()))
 
 You can create and work with isotopes using mass numbers:
 
-```@example
-using ChargedParticles
-
+```@example share
 # Create isotopes
-fe56 = Particle("Fe-56")
-deuteron = Particle("D+")
-tritium = Particle("T")
+fe56 = particle("Fe-56")
+deuteron = particle("D+")
+tritium = particle("T")
 
 println("Fe-56 mass number: ", mass_number(fe56))
 println("Deuteron mass number: ", mass_number(deuteron))

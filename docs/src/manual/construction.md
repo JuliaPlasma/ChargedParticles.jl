@@ -10,16 +10,16 @@ The most common way to create particles is using string format:
 using ChargedParticles
 
 # Basic elements
-fe = Particle("Fe")     # Iron
-he = Particle("He")     # Helium
+fe = particle("Fe")     # Iron
+he = particle("He")     # Helium
 
 # Ions with charge
-fe3 = Particle("Fe3+")  # Iron(III)
-fe2 = Particle("Fe2-")  # Iron(-II)
+fe3 = particle("Fe3+")  # Iron(III)
+fe2 = particle("Fe2-")  # Iron(-II)
 
 # Isotopes
-fe56 = Particle("Fe-56")  # Iron-56
-u235 = Particle("U-235")  # Uranium-235
+fe56 = particle("Fe-56")  # Iron-56
+u235 = particle("U-235")  # Uranium-235
 
 println("Iron: z = $(atomic_number(fe))")
 println("Iron(III): charge = $(charge(fe3))")
@@ -53,14 +53,14 @@ Many common particles have predefined aliases:
 using ChargedParticles
 
 # Elementary particles
-e = Particle("electron")  # or "e-"
-p = Particle("proton")    # or "p+"
-n = Particle("neutron")   # or "n"
+e = particle("electron")  # or "e-"
+p = particle("proton")    # or "p+"
+n = particle("neutron")   # or "n"
 
 # Special particles
-α = Particle("alpha")     # He²⁺
-d = Particle("deuteron")  # D⁺
-t = Particle("triton")    # T⁺
+α = particle("alpha")     # He²⁺
+d = particle("deuteron")  # D⁺
+t = particle("triton")    # T⁺
 
 println("Electron charge: $(charge(e))")
 println("Alpha particle: z = $(atomic_number(α)), A = $(mass_number(α))")
@@ -75,12 +75,12 @@ You can also create particles using their atomic numbers:
 using ChargedParticles
 
 # Basic construction
-fe = Particle(26)        # Iron
-u = Particle(92)         # Uranium
+fe = particle(26)        # Iron
+u = particle(92)         # Uranium
 
 # With mass number and charge
-fe56_3plus = Particle(26, mass_numb=56, z=3)  # Fe-56³⁺
-u235_2plus = Particle(92, mass_numb=235, z=2)  # U-235²⁺
+fe56_3plus = particle(26, mass_numb=56, z=3)  # Fe-56³⁺
+u235_2plus = particle(92, mass_numb=235, z=2)  # U-235²⁺
 
 println("Iron: z = $(atomic_number(fe))")
 println("U-235²⁺: z = $(atomic_number(u235_2plus)), A = $(mass_number(u235_2plus))")
@@ -110,13 +110,13 @@ using ChargedParticles
 
 # These will throw errors
 try
-    invalid = Particle("XX")  # Invalid element symbol
+    invalid = particle("XX")  # Invalid element symbol
 catch e
     println("Error: ", e)
 end
 
 try
-    invalid = Particle(-1)    # Invalid atomic number
+    invalid = particle(-1)    # Invalid atomic number
 catch e
     println("Error: ", e)
 end
