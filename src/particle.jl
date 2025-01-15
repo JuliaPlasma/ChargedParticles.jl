@@ -73,5 +73,38 @@ H⁺
 """
 particle(sym::Symbol; kwargs...) = particle(string(sym); kwargs...)
 
-Particle(str::AbstractString; mass_numb=nothing, z=nothing, typed=false) = particle(str; mass_numb, z, typed)
+"""
+    particle(atomic_number::Int; mass_numb=nothing, z=0, typed=false)
+
+Create a particle from its atomic number with optional mass number and charge state.
+
+# Arguments
+- `atomic_number::Int`: The atomic number (number of protons)
+- `mass_numb=nothing`: Optional mass number (total number of nucleons)
+- `z=0`: Optional charge number (in elementary charge units)
+- `typed=false`: If true, creates a type-parameterized SParticle instead of a regular Particle
+
+# Examples
+```jldoctest; output = false
+# Basic construction
+iron = particle(26)        # Iron
+u = particle(92)          # Uranium
+
+# With mass number and charge
+fe56_3plus = particle(26, mass_numb=56, z=3)  # Fe-56³⁺
+he4_2plus = particle(2, mass_numb=4, z=2)     # ⁴He²⁺ (alpha particle)
+# output
+He²⁺
+```
+
+See also: [`particle(::AbstractString)`](@ref)
+"""
+function particle(atomic_number::Int; mass_numb=nothing, z=0, typed=false)
+    element = elements[atomic_number]
+    mass_number = something(mass_numb, element.mass_number)
+    return typed ? SParticle(z, atomic_number, mass_number) : Particle(symbol(element), z, mass_number)
+end
+
+Particle(atomic_number::Int; mass_numb=nothing, z=0) = particle(atomic_number; mass_numb, z, typed=false)
+Particle(str::AbstractString; mass_numb=nothing, z=nothing) = particle(str; mass_numb, z, typed=false)
 Particle(sym::Symbol; kwargs...) = particle(string(sym); kwargs...)

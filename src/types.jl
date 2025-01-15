@@ -90,36 +90,5 @@ function Particle(p::AbstractParticle; mass_numb=nothing, z=nothing)
     Particle(symbol(p), charge_number, mass_number)
 end
 
-"""
-    Particle(atomic_number::Int; mass_numb=nothing, z=0)
-
-Create a particle from its atomic number with optional mass number and charge state.
-
-# Arguments
-- `atomic_number::Int`: The atomic number (number of protons)
-- `mass_numb=nothing`: Optional mass number (total number of nucleons)
-- `z=0`: Optional charge number (in elementary charge units)
-
-# Examples
-```jldoctest; output = false
-# Basic construction
-iron = Particle(26)        # Iron
-u = Particle(92)          # Uranium
-
-# With mass number and charge
-fe56_3plus = Particle(26, mass_numb=56, z=3)  # Fe-56³⁺
-he4_2plus = Particle(2, mass_numb=4, z=2)     # ⁴He²⁺ (alpha particle)
-# output
-He²⁺
-```
-
-See also: [`Particle(::AbstractString)`](@ref)
-"""
-function Particle(atomic_number::Int; mass_numb=nothing, z=0)
-    element = elements[atomic_number]
-    mass_number = something(mass_numb, element.mass_number)
-    Particle(symbol(element), z, mass_number)
-end
-
 """Create a proton"""
 proton() = Particle(:p, 1, 1)
