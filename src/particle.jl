@@ -110,6 +110,8 @@ function particle(atomic_number::Int; mass_numb=nothing, z=0, typed=false)
     return typed ? SParticle(z, atomic_number, mass_number) : Particle(symbol(element), z, mass_number)
 end
 
+particle(p::AbstractParticle) = p
+
 Particle(atomic_number::Int; mass_numb=nothing, z=0) = particle(atomic_number; mass_numb, z, typed=false)
 Particle(str::AbstractString; mass_numb=nothing, z=nothing) = particle(str; mass_numb, z, typed=false)
 Particle(sym::Symbol; kwargs...) = particle(string(sym); kwargs...)

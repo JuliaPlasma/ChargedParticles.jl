@@ -33,6 +33,8 @@ Abstract type representing quarks (up, down, charm, strange, top, bottom).
 """
 abstract type AbstractQuark <: AbstractFermion end
 
+Base.broadcastable(x::AbstractParticle) = Ref(x)
+
 # Type for particle-like inputs
 const ParticleLike = Union{AbstractParticle,Symbol,AbstractString}
 
