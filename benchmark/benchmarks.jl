@@ -1,5 +1,5 @@
+@time using ChargedParticles
 using Chairmarks
-using ChargedParticles
 
 p = Particle("Fe 2+")
 sp = SParticle(2, 26, 56)

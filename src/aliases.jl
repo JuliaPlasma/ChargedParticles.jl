@@ -7,20 +7,14 @@ const NEUTRON_ALIASES = ("neutron", "n")
 const MUON_ALIASES = ("muon", "μ", "μ-", "mu-", "mu")
 const ANTIMUON_ALIASES = ("antimuon", "μ+", "mu+")
 
-"""
-    PARTICLE_ALIASES
-
-Dictionary of common particle aliases and their corresponding (symbol, charge, mass_number) tuples.
-
-Each entry maps a string alias to a tuple of (symbol, charge, mass_number)
-"""
-PARTICLE_ALIASES = Dict(
+# Dictionary of common particle aliases and their corresponding (symbol, charge, mass_number) tuples.
+const PARTICLE_ALIASES = Dict(
     (PROTON_ALIASES .=> Ref(("H", 1, 1)))...,
-    (ELECTRON_ALIASES .=> :Electron)...,
-    (NEUTRON_ALIASES .=> :Neutron)...,
-    (POSITRON_ALIASES .=> :Positron)...,
-    (MUON_ALIASES .=> :Muon)...,
-    (ANTIMUON_ALIASES .=> :AntiMuon)...,
+    (ELECTRON_ALIASES .=> Electron)...,
+    (NEUTRON_ALIASES .=> Neutron)...,
+    (POSITRON_ALIASES .=> Positron)...,
+    (MUON_ALIASES .=> Muon)...,
+    (ANTIMUON_ALIASES .=> AntiMuon)...,
     "alpha" => ("He", 2, 4),
     "deuteron" => ("H", 1, 2),
     "D+" => ("H", 1, 2),
@@ -29,3 +23,6 @@ PARTICLE_ALIASES = Dict(
     "triton" => ("H", 1, 3),
     "T+" => ("H", 1, 3),
 )
+
+# Dictionary of common particle aliases (as Symbols) for quicker lookup.
+const PARTICLE_ALIASES_SYMBOL = Dict(Symbol(k) => v for (k, v) in PARTICLE_ALIASES)

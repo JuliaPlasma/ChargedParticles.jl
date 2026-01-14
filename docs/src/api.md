@@ -34,9 +34,3 @@ is_default_isotope
 ChargedParticles.is_proton
 ChargedParticles.is_electron
 ```
-
-## Constants
-
-```@docs
-ChargedParticles.PARTICLE_ALIASES
-```

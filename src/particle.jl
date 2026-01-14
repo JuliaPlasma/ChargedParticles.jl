@@ -1,10 +1,9 @@
 """
-    particle(str::AbstractString; mass_numb=nothing, z=nothing, typed=false)
+    particle(s; mass_numb=nothing, z=nothing, typed=false)
 
-Create a particle from a string representation.
+Create a particle species from the representation `s`.
 
 # Arguments
-- `str::AbstractString`: String representation of the particle
 - `mass_numb`: Optional mass number override
 - `z`: Optional charge number override
 - `typed`: If true, creates a type-parameterized SParticle instead of a regular Particle
@@ -30,38 +29,7 @@ iron56 = particle("Fe-56")
 # output
 Fe
 ```
-"""
-function particle(str::AbstractString; mass_numb=nothing, z=nothing, typed=false)
-    # Check aliases first
-    if haskey(PARTICLE_ALIASES, str)
-        result = PARTICLE_ALIASES[str]
-        if result isa Tuple
-            symbol, charge, mass_number = result
-            symbol = Symbol(symbol)
-            return typed ? SParticle(charge, atomic_number(symbol), mass_number) : Particle(symbol, charge, mass_number)
-        else
-            return eval(result)()
-        end
-    end
 
-    # Try to parse as element with optional mass number and charge
-    result = parse_particle_string(str)
-    if !isnothing(result)
-        (symbol, parsed_charge, parsed_mass_numb) = result
-        element = elements[symbol]
-        charge = determine(parsed_charge, z; default=0)
-        mass_number = determine(parsed_mass_numb, mass_numb; default=element.mass_number)
-        return typed ? SParticle(charge, element.number, mass_number) : Particle(symbol, charge, mass_number)
-    end
-    throw(ArgumentError("Invalid particle string format: $str"))
-end
-
-"""
-    particle(sym::Symbol)
-
-Create a particle from its symbol representation.
-
-# Examples
 ```jldoctest; output = false
 # Elementary particles
 electron = particle(:e)
@@ -71,7 +39,48 @@ proton = particle(:p)
 H⁺
 ```
 """
-particle(sym::Symbol; kwargs...) = particle(string(sym); kwargs...)
+function particle end
+
+function particle(str::AbstractString; mass_numb=nothing, z=nothing, typed=false)
+    # Check aliases first
+    if haskey(PARTICLE_ALIASES, str)
+        result = PARTICLE_ALIASES[str]
+        return if result isa Tuple
+            symbol, charge, mass_number = result
+            symbol = Symbol(symbol)
+            typed ? SParticle(charge, atomic_number(symbol), mass_number) : Particle(symbol, charge, mass_number)
+        else
+            result()
+        end
+    end
+
+    # Try to parse as element with optional mass number and charge
+    result = parse_particle_string(str)
+    if !isnothing(result)
+        (symbol, parsed_charge, parsed_mass_numb) = result
+        element = elements[symbol]
+        charge = @something determine(parsed_charge, z) 0
+        mass_number = @something determine(parsed_mass_numb, mass_numb) element.mass_number
+        return typed ? SParticle(charge, element.number, mass_number) : Particle(symbol, charge, mass_number)
+    end
+    throw(ArgumentError("Invalid particle string format: $str"))
+end
+
+function particle(sym::Symbol; mass_numb=nothing, z=nothing, typed=false)
+    # Check symbol aliases first for faster lookup
+    if haskey(PARTICLE_ALIASES_SYMBOL, sym)
+        result = PARTICLE_ALIASES_SYMBOL[sym]
+        return if result isa Tuple
+            symbol, charge, mass_number = result
+            symbol = Symbol(symbol)
+            typed ? SParticle(charge, atomic_number(symbol), mass_number) : Particle(symbol, charge, mass_number)
+        else
+            result()
+        end
+    end
+    # Fall back to string-based lookup
+    particle(string(sym); mass_numb, z, typed)
+end
 
 particle(s::Symbol, charge_number::Int, mass_number::Int; typed::Bool=false) =
     typed ? SParticle(charge_number, atomic_number(s), mass_number) :
@@ -110,7 +119,7 @@ function particle(atomic_number::Int; mass_numb=nothing, z=0, typed=false)
     return typed ? SParticle(z, atomic_number, mass_number) : Particle(symbol(element), z, mass_number)
 end
 
-particle(p::AbstractParticle) = p
+particle(p::AbstractParticle; kw...) = p
 
 Particle(atomic_number::Int; mass_numb=nothing, z=0) = particle(atomic_number; mass_numb, z, typed=false)
 Particle(str::AbstractString; mass_numb=nothing, z=nothing) = particle(str; mass_numb, z, typed=false)

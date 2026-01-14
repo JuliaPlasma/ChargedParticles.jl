@@ -10,12 +10,12 @@ const elements = chem_elements
 include("./types.jl")
 include("./particle.jl")
 include("./properties.jl")
-include("./aliases.jl")
 include("./utils.jl")
 include("./typed_particles.jl")
 include("./custom_particles.jl")
 include("./special_particles.jl")
 include("./display.jl")
+include("./aliases.jl")
 
 export AbstractParticle, Particle, SParticle, CustomParticle
 export Electron, Muon, Neutron
