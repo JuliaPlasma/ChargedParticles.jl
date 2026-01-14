@@ -83,16 +83,11 @@ false
 is_proton(p) = (p.symbol in [:H, :p]) && p.charge_number == 1 && p.mass_number == 1
 
 
-
-# Helper function to determine the value of x or y
-function determine(x, y; default=nothing)
-    @match (x, y) begin
-        ($nothing, $nothing) => default
-        (x, $nothing) => x
-        ($nothing, y) => y
-        (x, y) => x == y ? x : throw(ArgumentError("Inconsistent $x and $y"))
-    end
-end
+determine(::Nothing, y) = y
+determine(x, ::Nothing) = x
+determine(::Nothing, ::Nothing) = nothing
+# determine(x, y) = @assert x == y; x
+determine(x, y) = x == y ? x : throw(ArgumentError("Inconsistent $x and $y"))
 
 function parse_particle_string(str::AbstractString)
     pattern = r"^([A-Za-z]+)(?:-([\d]+))?(?:\s*(\d+)?([+-]))?$"
