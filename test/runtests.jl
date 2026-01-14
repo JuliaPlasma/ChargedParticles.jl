@@ -5,6 +5,11 @@ using Unitful: q, me
 
 using Mendeleev: elements
 
+@testset "Code quality (Aqua.jl)" begin
+    using Aqua
+    Aqua.test_all(ChargedParticles)
+end
+
 @testset "ChargedParticles.jl" begin
     @testset "Basic Particles" begin
         # Test electron
